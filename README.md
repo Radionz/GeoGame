@@ -21,3 +21,21 @@ Côté client notre application web, qui se veut hybride (disponible autant sur 
 
 ### Côté serveur ###
 Côté serveur nous avons un serveur Node.js couplé à une base de donnée MongoDB (nos données ayant peu de nécessité relationnelle et MongoDB étant le gestionaire de base de donnée NoSQL le plus complet au niveau de son API et de ses requêtes. Elle permet notamment de faire facilement des recherches basées sur des critères en relation avec la position (latitude, longitude).
+
+    
+Installer node.js
+
+    sudo apt-get install nodejs
+
+Vérifier que ça à focntionné
+
+    node -v
+    npm -v
+
+Installer MongoDB
+
+    sudo apt-get -y install mongodb
+
+Ensuite installer mongoose (Package NPM pour communiquer en JS avec la base MongoDB)
+    
+    npm install mongoose --save
