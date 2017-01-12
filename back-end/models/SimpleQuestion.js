@@ -10,7 +10,7 @@ var SimpleQuestionSchema = new mongoose.Schema({
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
     },
-    updated_at: { type: Date, default: Date.now },
+    updated_at: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('SimpleQuestion', SimpleQuestionSchema);

@@ -1,8 +1,10 @@
 var express = require('express'),
 bodyParser = require('body-parser')
 http = require('http'),
-question = require('./routes/question'),
 mongoose = require('mongoose');
+
+var question = require('./routes/question'),
+game = require('./routes/game');
 
 var PORT = 8080;
 var MONGODB_URL = "mongodb://localhost";
@@ -12,7 +14,7 @@ mongoose.Promise = global.Promise;
 
 // connect to MongoDB
 mongoose.connect(MONGODB_URL + '/question-api')
-.then(() =>  console.log('Connection succesful to mongodb.'))
+.then(() =>  console.log('Connection successful to mongodb.'))
 .catch((err) => console.error(err));
 
 var app = express();
@@ -24,13 +26,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 * ROUTES
 */
 app.use('/question', question);
-
+app.use('/game', game);
 
 app.set('port', PORT);
 
 // Create HTTP server.
 var server = http.createServer(app);
-
 
 // Listen on provided port, on all network interfaces.
 server.listen(PORT);
