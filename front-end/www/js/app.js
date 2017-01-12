@@ -24,8 +24,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Question'])
 })
 
 .constant('ServerEndpoint', {
-        url: 'https://localhost:8080/'
-        //url: 'https://server_url:8080/'
+        url: 'http://localhost:8080'
+        //url: 'http://server_url:8080'
     })
 
 .config(function($stateProvider, $urlRouterProvider) {
