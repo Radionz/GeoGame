@@ -11,7 +11,7 @@ mongoose.Promise = global.Promise;
 
 // connect to MongoDB
 mongoose.connect('mongodb://localhost/question-api')
-.then(() =>  console.log('connection succesful'))
+.then(() =>  console.log('Connection succesful to mongodb.'))
 .catch((err) => console.error(err));
 
 var app = express();
