@@ -11,23 +11,33 @@
                     <div class="item item-text-wrap">
                         <div class="list">
                             <label class="item item-input item-floating-label">
-                                <span class="input-label">First Name</span>
-                                <input type="text" placeholder="First Name">
+                                <span class="input-label">Name</span>
+                                <input type="text" placeholder="Name" ng-model="question.name">
                             </label>
                             <label class="item item-input item-floating-label">
-                                <span class="input-label">Last Name</span>
-                                <input type="text" placeholder="Last Name">
+                                <span class="input-label">Question</span>
+                                <input type="text" placeholder="Question" ng-model="question.question">
                             </label>
                             <label class="item item-input item-floating-label">
-                                <span class="input-label">Email</span>
-                                <input type="text" placeholder="Email">
+                                <span class="input-label">Answer</span>
+                                <input type="text" placeholder="Answer" ng-model="question.answer">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Points</span>
+                                <input type="text" placeholder="Points" ng-model="question.points">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Longitude</span>
+                                <input type="text" placeholder="Longitude" ng-model="question.longitude">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Latitude</span>
+                                <input type="text" placeholder="Latitude" ng-model="question.latitude">
                             </label>
                         </div>
                     </div>
                     <div class="item item-divider">
-                        <button class="button button-full button-balanced">
-                            Create !
-                        </button>
+                        <button type="submit" class="button button-full button-balanced" ng-click="createQuestion(question)">Create !</button>
                     </div>
                 </div>
             </div>
@@ -38,14 +48,12 @@
                     </div>
                     <div class="item item-text-wrap">
                         <ul class="list">
-                            <li class="item">
-                                Quesion 1
-                            </li>
-                            <li class="item">
-                                Quesion 2
-                            </li>
-                            <li class="item">
-                                Quesion 3
+                            <li class="item item-icon-left"  ng-repeat="question in questions">
+                                <i class="icon ion-chatbubble-working"></i>
+                                <h2>{{question.name}}</h2>
+                                <p>Question: {{question.question}}</p>
+                                <p>Answer: {{question.answer}}</p>
+                                <span class="badge badge-calm">{{question.points}} pts</span>
                             </li>
                         </ul>
                     </div>

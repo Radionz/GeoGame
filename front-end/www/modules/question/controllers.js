@@ -19,4 +19,12 @@ angular.module('Question')
             zoom: 11
         });
     }
+
+    $scope.createQuestion = function (question) {
+        console.log(question);
+        QuestionService.postQuestion($scope, question);
+        $scope.$on('postQuestionOK', function (event, data) {
+            console.log(data);
+        })
+    }
 });
