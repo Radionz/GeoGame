@@ -1,5 +1,69 @@
 <ion-view view-title="Welcome to GeoGame">
     <ion-content>
         <h1>GeoGame</h1>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="item item-divider">
+                        Create a new question
+                    </div>
+                    <div class="item item-text-wrap">
+                        <div class="list">
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">First Name</span>
+                                <input type="text" placeholder="First Name">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Last Name</span>
+                                <input type="text" placeholder="Last Name">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Email</span>
+                                <input type="text" placeholder="Email">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="item item-divider">
+                        <button class="button button-full button-balanced">
+                            Create !
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="item item-divider">
+                        Question's list
+                    </div>
+                    <div class="item item-text-wrap">
+                        <ul class="list">
+                            <li class="item">
+                                Quesion 1
+                            </li>
+                            <li class="item">
+                                Quesion 2
+                            </li>
+                            <li class="item">
+                                Quesion 3
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="item item-divider">
+                        Question's map
+                    </div>
+                    <div class="item item-text-wrap">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
