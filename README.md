@@ -27,7 +27,7 @@ Installer node.js
 
     sudo apt-get install nodejs
 
-Vérifier que ça à focntionné
+Vérifier que ça à fonctionné
 
     node -v
     npm -v
@@ -39,3 +39,7 @@ Installer MongoDB
 Ensuite installer mongoose (Package NPM pour communiquer en JS avec la base MongoDB)
     
     npm install mongoose --save
+
+Installer express
+
+    npm install express --save
