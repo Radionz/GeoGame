@@ -1,0 +1,38 @@
+{
+  "name": "module-name",
+  "version": "10.3.1",
+  "description": "An example module to illustrate the usage of a package.json",
+  "author": "Your Name <you.name@example.org>",
+  "contributors": [
+    {
+      "name": "Dorian Blanc",
+      "email": "blanc.dorian.pro@gmail.com"
+    },
+    {
+      "name": "Yann Guidez",
+      "email": ""
+    },
+    {
+      "name": "Manuel Pavone",
+      "email": ""
+    }
+  ],
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Radionz/GeoGame"
+  },
+  "keywords": [
+    "polytech",
+    "programmable web",
+    "mini-projet",
+    "game",
+    "GeoGame"
+  ],
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongoose": "^4.7.6"
+  },
+  "devDependencies": {},
+  "license": "MIT"
+}
