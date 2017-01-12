@@ -13,9 +13,8 @@ var SimpleQuestionSchema = new mongoose.Schema({
 // Create a model based on the schema
 var SimpleQuestion = mongoose.model('SimpleQuestion', SimpleQuestionSchema);
 
-
 // Create a question in memory
-var question = new SimpleQuestion({name: "Première Question", question: "Quel est la taille du zizi de manuel", answer: "10 centimètres", nb_point = 10});
+var question = new SimpleQuestion({name: "Première Question", question: "Quel est la taille du zizi de manuel ?", answer: "10 centimètres", nb_point = 10});
 // Save it to database
 question.save(function(err){
   if(err)

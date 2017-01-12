@@ -1,8 +1,8 @@
 {
-  "name": "module-name",
-  "version": "10.3.1",
-  "description": "An example module to illustrate the usage of a package.json",
-  "author": "Your Name <you.name@example.org>",
+  "name": "GeoGame",
+  "version": "0.0.1",
+  "description": "Jeu de piste géolocalisé sous forme d'une web app hybride basé sur Ionic v1",
+  "author": "Dorian BLANC <blanc.dorian.pro@gmail.com>",
   "contributors": [
     {
       "name": "Dorian Blanc",
