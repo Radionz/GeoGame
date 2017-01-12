@@ -52,7 +52,7 @@ Alors vous n'avez certainement pas MongoDB d'installé ou de lancé sur votre ma
 
 #### Windows ####
 Rendez-vous ici :
-https://www.mongodb.com/download-center?jmp=nav
+https://www.mongodb.com/download-center
 et létélchargez la dernière version que vous installerez en version Complète
 *Current Stable Release (3.4.1) le 12/1/2017*
 
