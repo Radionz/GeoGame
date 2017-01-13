@@ -6,11 +6,13 @@ var SimpleQuestionSchema = new mongoose.Schema({
     question: String,
     answer: String,
     nb_point: Number,
-    location: {
-        type: [Number],  // [<longitude>, <latitude>]
-        index: '2d'      // create the geospatial index
+    loc: {
+        type: { type: String, default: 'Point' },
+        coordinates: [Number]
     },
     updated_at: { type: Date, default: Date.now }
 });
+
+SimpleQuestionSchema.index({loc:'2dsphere'});
 
 module.exports = mongoose.model('SimpleQuestion', SimpleQuestionSchema);

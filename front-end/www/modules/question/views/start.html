@@ -1,9 +1,7 @@
 <ion-view view-title="Welcome to GeoGame">
     <ion-content>
-        <h1>GeoGame</h1>
-
         <div class="row">
-            <div class="col">
+            <div class="col-33">
                 <div class="card">
                     <div class="item item-divider">
                         Create a new question
@@ -24,15 +22,15 @@
                             </label>
                             <label class="item item-input item-floating-label">
                                 <span class="input-label">Points</span>
-                                <input type="text" placeholder="Points" ng-model="question.points">
+                                <input type="number" placeholder="Points" ng-model="question.nb_point">
                             </label>
                             <label class="item item-input item-floating-label">
                                 <span class="input-label">Longitude</span>
-                                <input type="text" placeholder="Longitude" ng-model="question.longitude">
+                                <input type="text" placeholder="Longitude" ng-model="question.loc.coordinates[0]">
                             </label>
                             <label class="item item-input item-floating-label">
                                 <span class="input-label">Latitude</span>
-                                <input type="text" placeholder="Latitude" ng-model="question.latitude">
+                                <input type="text" placeholder="Latitude" ng-model="question.loc.coordinates[1]">
                             </label>
                         </div>
                     </div>
@@ -41,34 +39,56 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="card">
-                    <div class="item item-divider">
-                        Question's list
+            <div class="col-67">
+                <div class="row">
+                    <div class="col-75">
+                        <div class="card">
+                            <div class="item item-divider">
+                                Question's list
+                            </div>
+                            <div class="item item-text-wrap">
+                                <ul class="list">
+                                    <li class="item item-icon-left"  ng-repeat="question in questions">
+                                        <i class="icon ion-chatbubble-working"></i>
+                                        <h2>{{question.name}}</h2>
+                                        <p>Question: {{question.question}}</p>
+                                        <p>Answer: {{question.answer}}</p>
+                                        <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
+                                        <span class="badge badge-calm">{{question.nb_point}} pts</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item item-text-wrap">
-                        <ul class="list">
-                            <li class="item item-icon-left"  ng-repeat="question in questions">
-                                <i class="icon ion-chatbubble-working"></i>
-                                <h2>{{question.name}}</h2>
-                                <p>Question: {{question.question}}</p>
-                                <p>Answer: {{question.answer}}</p>
-                                <span class="badge badge-calm">{{question.points}} pts</span>
-                            </li>
-                        </ul>
+                    <div class="col-25">
+                        <div class="card">
+                            <div class="item item-divider">
+                                Settings
+                            </div>
+                            <div class="item item-text-wrap">
+                                <div class="list">
+                                    <div class="item range range-positive">
+                                        <i class="icon ion-ios-clock-outline"></i>
+                                        <input type="range" name="duration" min="0" max="120" value="45">
+                                        <span>12</span>
+                                    </div>
+                                    <div class="item range range-positive">
+                                        <i class="icon ion-ios-people"></i>
+                                        <input type="range" name="nb_player" min="0" max="15" value="5">
+                                        <span>12</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
                 <div class="card">
                     <div class="item item-divider">
                         Question's map
                     </div>
                     <div class="item item-text-wrap">
-                        <div id="map"></div>
+                        <div id="map" data-tap-disabled="true"></div>
                     </div>
                 </div>
             </div>
