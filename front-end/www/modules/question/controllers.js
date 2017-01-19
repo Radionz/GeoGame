@@ -60,9 +60,6 @@ angular.module('Question')
       $scope.question.loc.coordinates[1] = event.latLng.lat();
       $( "input[placeholder='Latitude']" ).val(event.latLng.lat());
       $( "input[placeholder='Latitude']" ).siblings('span').addClass('has-input');
-
-
-      console.log( "Latitude: "+event.latLng.lat()+" "+", longitude: "+ event.latLng.lng());
     });
   }
 

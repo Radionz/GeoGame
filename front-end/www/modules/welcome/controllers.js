@@ -7,7 +7,7 @@ angular.module('Welcome')
     GameService.getGames($scope);
     $scope.$on('getGamesOK', function (event, data) {
       $scope.games = data;
-    })
+    });
 
   });
 
