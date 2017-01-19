@@ -41,7 +41,7 @@
             </div>
             <div class="col-67">
                 <div class="row">
-                    <div class="col-75">
+                    <div class="col-67">
                         <div class="card">
                             <div class="item item-divider">
                                 Question's list
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-25">
+                    <div class="col-33">
                         <div class="card">
                             <div class="item item-divider">
                                 Settings
@@ -69,13 +69,14 @@
                                 <div class="list">
                                     <div class="item range range-positive">
                                         <i class="icon ion-ios-clock-outline"></i>
-                                        <input type="range" name="duration" min="0" max="120" value="45">
-                                        <span>12</span>
+                                        <input type="range" name="duration" min="0" max="120" value="90" ng-change="computeHourAndMinutes()" ng-model="gameSettings.duration">
+                                        <span>{{gameSettings.duration}} min</span>
+                                        <!-- <span ng-show="gameSettings.hours > 0">{{gameSettings.hours}}h</span><span ng-show="gameSettings.minutes > 0">{{gameSettings.minutes}}</span><span ng-hide="gameSettings.hours > 0">min</span> -->
                                     </div>
                                     <div class="item range range-positive">
                                         <i class="icon ion-ios-people"></i>
-                                        <input type="range" name="nb_player" min="0" max="15" value="5">
-                                        <span>12</span>
+                                        <input type="range" name="nb_player" min="0" max="15" value="5" ng-model="gameSettings.playerNb">
+                                        <span>{{gameSettings.playerNb}} pers</span>
                                     </div>
                                 </div>
                             </div>
