@@ -1,4 +1,4 @@
-<ion-view view-title="Welcome to GeoGame">
+<ion-view view-title="Question manager">
   <ion-content>
     <div class="row">
       <div class="col-33">
@@ -47,20 +47,10 @@
           <div class="col-67">
             <div class="card">
               <div class="item item-divider">
-                Question's list
+                Question's map
               </div>
               <div class="item item-text-wrap">
-                <ul class="list">
-                  <li class="item"  ng-repeat="question in questions">
-                    <h2>{{question.name}} ({{question.nb_point}} pts)</h2>
-                    <p>Question: {{question.question}}</p>
-                    <p>Answer: {{question.answer}}</p>
-                    <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
-
-                    <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right;" ng-click="deleteQuestion(question._id, $index)">Delete</button>
-                    <div style="clear: both;"></div>
-                  </li>
-                </ul>
+                <div id="map" data-tap-disabled="true"></div>
               </div>
             </div>
           </div>
@@ -88,15 +78,31 @@
           </div>
         </div>
 
-        <div class="card">
-          <div class="item item-divider">
-            Question's map
-          </div>
-          <div class="item item-text-wrap">
-            <div id="map" data-tap-disabled="true"></div>
+        <div class="row">
+          <div class="col">
+            <div class="card">
+              <div class="item item-divider">
+                Question's list
+              </div>
+              <div class="item item-text-wrap">
+                <ul class="list">
+                  <li class="item"  ng-repeat="question in questions">
+                    <h2>{{question.name}} ({{question.nb_point}} pts)</h2>
+                    <p>Question: {{question.question}}</p>
+                    <p>Answer: {{question.answer}}</p>
+                    <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
+
+                    <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right;" ng-click="deleteQuestion(question._id, $index)">Delete</button>
+                    <div style="clear: both;"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
+      <!-- /col-67  -->
     </div>
   </ion-content>
 </ion-view>

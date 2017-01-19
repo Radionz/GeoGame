@@ -4,6 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
+angular.module('Welcome', []);
 angular.module('Question', []);
 angular.module('starter', ['ionic', 'starter.controllers', 'Question'])
 
@@ -38,15 +39,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Question'])
         controller: 'AppCtrl'
     })
 
-    .state('app.start', {
-        url: '/start',
+    .state('app.question', {
+        url: '/question',
         views: {
             'menuContent': {
-                templateUrl: 'modules/question/views/start.html',
-                controller: 'StartCtrl'
+                templateUrl: 'modules/question/views/question.html',
+                controller: 'QuestionCtrl'
             }
         }
     });
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/start');
+    $urlRouterProvider.otherwise('/app/question');
 });

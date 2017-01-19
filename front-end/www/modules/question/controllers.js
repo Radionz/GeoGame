@@ -1,6 +1,6 @@
 angular.module('Question')
 
-.controller('StartCtrl', function($scope, QuestionService) {
+.controller('QuestionCtrl', function($scope, QuestionService) {
 
   $scope.gameSettings = {};
   $scope.gameSettings.duration = 90;
