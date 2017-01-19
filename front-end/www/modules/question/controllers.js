@@ -13,7 +13,7 @@ angular.module('Question')
   //   $scope.gameSettings.hours = hours;
   //   $scope.gameSettings.minutes = minutes;
   // }
-  
+
   $scope.question = {};
   $scope.question.loc = {};
   $scope.question.loc.coordinates = [];
@@ -39,11 +39,8 @@ angular.module('Question')
   });
 
   $scope.createQuestion = function (question) {
-    console.log(question);
-    $scope.questions.push(question);
     QuestionService.postQuestion($scope, question);
     $scope.$on('postQuestionOK', function (event, data) {
-      console.log(data);
       $scope.questions.push(data);
       addQuestionToMap(data);
     })
@@ -54,6 +51,19 @@ angular.module('Question')
       center: {lat: 43.6221174, lng: 7.0391009},
       zoom: 14
     });
+
+    google.maps.event.addListener($scope.map, 'click', function( event ){
+      $scope.question.loc.coordinates[0] = event.latLng.lng();
+      $( "input[placeholder='Longitude']" ).val(event.latLng.lng());
+      $( "input[placeholder='Longitude']" ).siblings('span').addClass('has-input');
+
+      $scope.question.loc.coordinates[1] = event.latLng.lat();
+      $( "input[placeholder='Latitude']" ).val(event.latLng.lat());
+      $( "input[placeholder='Latitude']" ).siblings('span').addClass('has-input');
+
+
+      console.log( "Latitude: "+event.latLng.lat()+" "+", longitude: "+ event.latLng.lng());
+    });
   }
 
   function addQuestionToMap(question) {
@@ -61,11 +71,16 @@ angular.module('Question')
       position: new google.maps.LatLng(question.loc.coordinates[1], question.loc.coordinates[0]),
       map: $scope.map,
       icon: image,
-      label: 15,
       title: question.name,
       animation: google.maps.Animation.DROP
     });
 
-    console.log();
+  }
+
+  $scope.deleteQuestion = function (id, index) {
+    QuestionService.deleteQuestion($scope, id);
+    $scope.$on('deleteQuestionOK', function (event, data) {
+      $scope.questions.splice(index, 1);
+    })
   }
 });
