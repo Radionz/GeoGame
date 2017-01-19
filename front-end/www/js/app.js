@@ -5,8 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('Welcome', []);
+angular.module('Game', []);
 angular.module('Question', []);
-angular.module('starter', ['ionic', 'starter.controllers', 'Question'])
+angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -38,7 +39,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Question'])
         templateUrl: 'templates/menu.html',
         controller: 'AppCtrl'
     })
-
+    .state('app.welcome', {
+        url: '/welcome',
+        views: {
+            'menuContent': {
+                templateUrl: 'modules/welcome/views/welcome.html',
+                controller: 'WelcomeCtrl'
+            }
+        }
+    })
+    .state('app.game', {
+        url: '/game',
+        views: {
+            'menuContent': {
+                templateUrl: 'modules/game/views/game.html',
+                controller: 'GameCtrl'
+            }
+        }
+    })
     .state('app.question', {
         url: '/question',
         views: {
@@ -49,5 +67,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Question'])
         }
     });
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/question');
+    $urlRouterProvider.otherwise('/app/welcome');
 });
