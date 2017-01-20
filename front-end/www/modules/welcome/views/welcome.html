@@ -9,8 +9,7 @@
           </div>
           <div class="item item-text-wrap">
             <ul class="list">
-              <li class="item"  ng-repeat="game in games">
-                <a href="#"></a>
+              <li class="item" ng-repeat="game in games" ng-show="game.status == 'STARTED'">
                 <h2><a href="#/app/game/{{game._id}}">{{game.name}}</a></h2>
               </li>
             </ul>

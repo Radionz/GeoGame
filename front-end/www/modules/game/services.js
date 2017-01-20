@@ -38,6 +38,31 @@ angular.module('Game')
         console.log('ERR | postGame - Problème de communication avec le serveur.');
         $scope.$emit('postGameKO', error);
       });
+    },
+    putGame: function($scope, game) {
+      $http({
+        url: ServerEndpoint.url + "/game/"+game._id,
+        method: "PUT",
+        data: game
+      }).success(function(data) {
+        $scope.$emit('putGameOK', data);
+      })
+      .error(function(error, status){
+        console.log('ERR | putGame - Problème de communication avec le serveur.');
+        $scope.$emit('putGameKO', error);
+      });
+    },
+    deleteGame: function($scope, id) {
+      $http({
+        url: ServerEndpoint.url + "/game/" + id,
+        method: "DELETE"
+      }).success(function(data) {
+        $scope.$emit('deleteGameOK', data);
+      })
+      .error(function(error, status){
+        console.log('ERR | deleteGame - Problème de communication avec le serveur.');
+        $scope.$emit('deleteGameKO', error);
+      });
     }
   };
 });
