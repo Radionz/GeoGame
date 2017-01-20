@@ -1,22 +1,6 @@
 angular.module('Question')
 
-.controller('QuestionCtrl', function($scope, QuestionService) {
-
-  $scope.gameSettings = {};
-  $scope.gameSettings.duration = 90;
-  $scope.gameSettings.playerNb = 5;
-
-  // $scope.computeHourAndMinutes = function () {
-  //   var hours = Math.floor( $scope.gameSettings.duration / 60),
-  //   minutes = $scope.gameSettings.duration % 60;
-  //
-  //   $scope.gameSettings.hours = hours;
-  //   $scope.gameSettings.minutes = minutes;
-  // }
-
-  $scope.question = {};
-  $scope.question.loc = {};
-  $scope.question.loc.coordinates = [];
+.controller('QuestionManagerCtrl', function($scope, QuestionService) {
 
   var image = {
     url: 'img/question_marker.png',
@@ -36,6 +20,9 @@ angular.module('Question')
       });
     })
 
+    $scope.question = {};
+    $scope.question.loc = {};
+    $scope.question.loc.coordinates = [];
   });
 
   $scope.createQuestion = function (question) {
@@ -46,9 +33,70 @@ angular.module('Question')
     })
   }
 
+  function addYourLocationButton(map)
+  {
+    var controlDiv = document.createElement('div');
+
+    var firstChild = document.createElement('button');
+    firstChild.style.backgroundColor = '#fff';
+    firstChild.style.border = 'none';
+    firstChild.style.outline = 'none';
+    firstChild.style.width = '28px';
+    firstChild.style.height = '28px';
+    firstChild.style.borderRadius = '2px';
+    firstChild.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
+    firstChild.style.cursor = 'pointer';
+    firstChild.style.marginRight = '10px';
+    firstChild.style.padding = '0px';
+    firstChild.title = 'Your Location';
+    controlDiv.appendChild(firstChild);
+
+    var secondChild = document.createElement('div');
+    secondChild.style.position = 'absolute';
+    secondChild.style.top = '6px';
+    secondChild.style.left = '6px';
+    secondChild.style.width = '18px';
+    secondChild.style.height = '18px';
+    secondChild.style.backgroundImage = 'url(https://maps.gstatic.com/tactile/mylocation/mylocation-sprite-cookieless-v2-2x.png)';
+    secondChild.style.backgroundSize = '180px 18px';
+    secondChild.style.backgroundPosition = '0px 0px';
+    secondChild.style.backgroundRepeat = 'no-repeat';
+    secondChild.id = 'you_location_img';
+    firstChild.appendChild(secondChild);
+
+    google.maps.event.addListener(map, 'dragend', function() {
+      $('#you_location_img').css('background-position', '0px 0px');
+    });
+
+    firstChild.addEventListener('click', function() {
+      var imgX = '0';
+      var animationInterval = setInterval(function(){
+        if(imgX == '-18') imgX = '0';
+        else imgX = '-18';
+        $('#you_location_img').css('background-position', imgX+'px 0px');
+      }, 500);
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          map.setCenter(latlng);
+          clearInterval(animationInterval);
+          $('#you_location_img').css('background-position', '-144px 0px');
+        });
+      }
+      else{
+        clearInterval(animationInterval);
+        $('#you_location_img').css('background-position', '0px 0px');
+      }
+    });
+
+    controlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+  }
+
   function initMap() {
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 43.6221174, lng: 7.0391009},
+      streetViewControl: false,
       zoom: 14
     });
 
@@ -72,6 +120,25 @@ angular.module('Question')
       animation: google.maps.Animation.DROP
     });
 
+    var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">'+question.name+' ( '+question.nb_point+'pts )</h1>'+
+    '<div id="bodyContent">'+
+    '<p> Question: '+question.question+'</p>'+
+    '<p> Answer : '+question.answer+'</p>'+
+    '</div>'+
+    '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+
+    marker.addListener('click', function() {
+      infowindow.open($scope.map, marker);
+    });
+
+    addYourLocationButton($scope.map);
   }
 
   $scope.deleteQuestion = function (id, index) {
@@ -79,5 +146,10 @@ angular.module('Question')
     $scope.$on('deleteQuestionOK', function (event, data) {
       $scope.questions.splice(index, 1);
     })
+  }
+
+  $scope.centerOnQuestion = function (location) {
+    var center = new google.maps.LatLng(location[1], location[0]);
+    $scope.map.panTo(center);
   }
 });

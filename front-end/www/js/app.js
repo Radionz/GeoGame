@@ -49,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
         }
     })
     .state('app.game', {
-        url: '/game',
+        url: '/game/:id',
         views: {
             'menuContent': {
                 templateUrl: 'modules/game/views/game.html',
@@ -57,12 +57,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
             }
         }
     })
-    .state('app.question', {
-        url: '/question',
+    .state('app.gameManager', {
+        url: '/gameManager',
         views: {
             'menuContent': {
-                templateUrl: 'modules/question/views/question.html',
-                controller: 'QuestionCtrl'
+                templateUrl: 'modules/game/views/gameManager.html',
+                controller: 'GameManagerCtrl'
+            }
+        }
+    })
+    .state('app.questionManager', {
+        url: '/questionManager',
+        views: {
+            'menuContent': {
+                templateUrl: 'modules/question/views/questionManager.html',
+                controller: 'QuestionManagerCtrl'
             }
         }
     });

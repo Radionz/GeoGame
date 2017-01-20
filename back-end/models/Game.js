@@ -1,11 +1,10 @@
-
-
 var GameSchema = new mongoose.Schema({
-    name: String,
-    questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'SimpleQuestion'}],
-    scoreBoard: [{name: String, score: Number}],
-    duration: Number,
-    status: String,
+    name: { type : String, required : true, index: {unique: true} },
+    questions: [String],
+    scoreBoard: [{user: String, score: Number}],
+    duration: { type : Number, default: 90 },
+    playerNb: { type : Number, default: 5 },
+    status: { type : String, default : 'NOT_STARTED' },
     started_at: { type: Date },
     updated_at: { type: Date, default: Date.now }
 });

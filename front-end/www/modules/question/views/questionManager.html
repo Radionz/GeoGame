@@ -1,0 +1,82 @@
+<ion-view view-title="Question manager">
+  <ion-content>
+    <div class="row responsive-md">
+      <div class="col-33">
+        <div class="card">
+          <div class="item item-divider">
+            Create a new question
+          </div>
+          <div class="item item-text-wrap">
+            <div class="list">
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Name</span>
+                <input type="text" placeholder="Name" ng-model="question.name">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Question</span>
+                <input type="text" placeholder="Question" ng-model="question.question">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Answer</span>
+                <input type="text" placeholder="Answer" ng-model="question.answer">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Points</span>
+                <input type="number" placeholder="Points" ng-model="question.nb_point">
+              </label>
+              <div class="item">
+                <p>You can click on the map to get longitude and latitude</p>
+              </div>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Longitude</span>
+                <input type="text" placeholder="Longitude" ng-model="question.loc.coordinates[0]">
+              </label>
+              <label class="item item-input item-floating-label">
+                <span class="input-label">Latitude</span>
+                <input type="text" placeholder="Latitude" ng-model="question.loc.coordinates[1]">
+              </label>
+            </div>
+          </div>
+          <div class="item item-divider">
+            <button type="submit" class="button button-full button-balanced" ng-click="createQuestion(question)">Create !</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- /col-33 -->
+      <div class="col-67">
+        <div class="card">
+          <div class="item item-divider">
+            Question's map
+          </div>
+          <div class="item item-text-wrap">
+            <div id="map" data-tap-disabled="true"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="item item-divider">
+            Question's list
+          </div>
+          <div class="item item-text-wrap">
+            <ul class="list">
+              <li class="item"  ng-repeat="question in questions">
+                <h2>{{question.name}} ({{question.nb_point}} pts)</h2>
+                <p>Question: {{question.question}}</p>
+                <p>Answer: {{question.answer}}</p>
+                <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
+
+                <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-click="deleteQuestion(question._id, $index)">Delete</button>
+                <button class="button icon-left ion-pinpoint button-small button-calm pull-right" style="float: right; margin-right: 16px;" ng-click="centerOnQuestion(question.loc.coordinates)">Center on map</button>
+                <div style="clear: both;"></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      <!-- /col-67  -->
+    </div>
+    <!-- /row -->
+  </ion-content>
+</ion-view>

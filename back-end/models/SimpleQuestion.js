@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 
 var SimpleQuestionSchema = new mongoose.Schema({
-    name: String,
+    name: { type : String, required : true, index: {unique: true} },
     question: String,
     answer: String,
     nb_point: Number,
