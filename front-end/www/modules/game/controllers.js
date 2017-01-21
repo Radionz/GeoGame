@@ -1,6 +1,6 @@
 angular.module('Game')
 
-.controller('GameCtrl', function($scope, GameService, $stateParams) {
+.controller('GameCtrl', function($scope, GameService, QuestionService, $stateParams) {
 
   var image = {
     url: 'img/question_marker.png',
@@ -18,6 +18,13 @@ angular.module('Game')
     $scope.$on('getGameOK', function (event, data) {
       $scope.game = data;
       console.log($scope.game.questions);
+      angular.forEach($scope.game.questions, function(value) {
+        QuestionService.getQuestion($scope, value);
+      });
+      $scope.$on('getQuestionOK', function (event, data) {
+        console.log(data);
+        addQuestionToMap(data);
+      });
     });
   });
 
@@ -29,6 +36,34 @@ angular.module('Game')
     });
     addYourLocationButton($scope.map);
     addViewScoreBoardButton($scope.map);
+  }
+
+  function addQuestionToMap(question) {
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(question.loc.coordinates[1], question.loc.coordinates[0]),
+      map: $scope.map,
+      icon: image,
+      title: question.name,
+      animation: google.maps.Animation.DROP
+    });
+
+    var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">'+question.name+' ( '+question.nb_point+'pts )</h1>'+
+    '<div id="bodyContent">'+
+    '<p> Question: '+question.question+'</p>'+
+    '<p> Answer : '+question.answer+'</p>'+
+    '</div>'+
+    '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+
+    marker.addListener('click', function() {
+      infowindow.open($scope.map, marker);
+    });
   }
 })
 
