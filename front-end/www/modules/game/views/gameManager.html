@@ -12,7 +12,7 @@
                 <h2>{{game.name}}</h2>
                 <p>{{game.questions.length}} question(s)</p>
                 <p ng-show="game.status == 'STARTED'">{{game.scoreBoard.length}}/{{game.playerNb}} player(s)</p>
-                <p ng-show="game.status == 'STARTED'">Started at {{game.started_at | date:'dd/MM/yyyy HH:mm'}} ({{game.timeElapsed}} elapsed)</p>
+                <p ng-show="game.status == 'STARTED'">Started at {{game.started_at | date:'HH:mm'}} ({{game.timeElapsed | date:'HH:mm:ss'}} remaining)</p>
                 <span class="badge badge-calm">Status: {{game.status}}</span>
                 <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-click="deleteGame(game._id, $index)">Delete</button>
                 <button class="button icon-left ion-log-in button-small button-balanced pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED'" ng-click="startGame(game, $index)">Start</button>
