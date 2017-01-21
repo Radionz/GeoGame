@@ -122,23 +122,42 @@ angular.module('Game')
   $scope.createGame = function (game) {
     GameService.postGame($scope, game);
     $scope.$on('postGameOK', function (event, data) {
+      data.timeElapsed = "00:00:00";
+      if (data.status == "STARTED") {
+        var endTime = (+ new Date(data.started_at)) + (data.duration*60*1000);
+        var watchTimeRemaining = $interval(function(){
+          data.timeElapsed = new Date(endTime) - new Date();
+          if(data.timeElapsed<=0){
+            $interval.cancel(watchTimeRemaining);
+            data.status = "ENDED";
+          }
+        }, 1000);
+      }
       $scope.games.push(data);
     })
   };
 
   $scope.startGame = function (game, index) {
-    game.status = "STARTED";
-    game.started_at = (+ new Date());
-    GameService.putGame($scope, game);
-    $scope.$on('deleteGameOK', function (event, data) {
+    GameService.startGame($scope, game);
+    $scope.$on('startGameOK', function (event, data) {
+      data.timeElapsed = "00:00:00";
+      if (data.status == "STARTED") {
+        var endTime = (+ new Date(data.started_at)) + (data.duration*60*1000);
+        var watchTimeRemaining = $interval(function(){
+          data.timeElapsed = new Date(endTime) - new Date();
+          if(data.timeElapsed<=0){
+            $interval.cancel(watchTimeRemaining);
+            data.status = "ENDED";
+          }
+        }, 1000);
+      }
       $scope.games[index] = data;
     })
   };
 
   $scope.stopGame = function (game, index) {
-    game.status = "NOT_STARTED";
-    GameService.putGame($scope, game);
-    $scope.$on('deleteGameOK', function (event, data) {
+    $scope.$on('stopGameOK', function (event, data) {
+      data.timeElapsed = "00:00:00";
       $scope.games[index] = data;
     })
   };

@@ -52,6 +52,36 @@ angular.module('Game')
         $scope.$emit('putGameKO', error);
       });
     },
+    startGame: function($scope, game) {
+      game.status = "STARTED";
+      game.started_at = (+ new Date());
+      $http({
+        url: ServerEndpoint.url + "/game/"+game._id,
+        method: "PUT",
+        data: game
+      }).success(function(data) {
+        $scope.$emit('startGameOK', data);
+      })
+      .error(function(error, status){
+        console.log('ERR | startGame - Problème de communication avec le serveur.');
+        $scope.$emit('startGameKO', error);
+      });
+    },
+    stopGame: function($scope, game) {
+      game.status = "NOT_STARTED";
+      GameService.stopGame($scope, game);
+      $http({
+        url: ServerEndpoint.url + "/game/"+game._id,
+        method: "PUT",
+        data: game
+      }).success(function(data) {
+        $scope.$emit('stopGameOK', data);
+      })
+      .error(function(error, status){
+        console.log('ERR | stopGame - Problème de communication avec le serveur.');
+        $scope.$emit('stopGameKO', error);
+      });
+    },
     deleteGame: function($scope, id) {
       $http({
         url: ServerEndpoint.url + "/game/" + id,
