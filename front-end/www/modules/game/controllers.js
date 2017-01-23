@@ -74,10 +74,6 @@ angular.module('Game')
 
 .controller('GameManagerCtrl', function($scope, $interval, GameService, QuestionService) {
 
-  $scope.game = {};
-  $scope.game.duration = 90;
-  $scope.game.playerNb = 5;
-
   $scope.$on("$ionicView.enter", function(event, data){
     GameService.getGames().then(function(response) {
       var games = response.data;
@@ -92,15 +88,23 @@ angular.module('Game')
 
     QuestionService.getQuestions();
     $scope.$on('getQuestionsOK', function (event, questions) {
-        $scope.questions = questions;
+      $scope.questions = questions;
     });
+
+    $scope.initForm();
   });
 
+  $scope.initForm = function () {
+    $scope.formGame = {};
+    $scope.formGame.duration = 90;
+    $scope.formGame.playerNb = 5;
+  }
+
   $scope.questionSelected = function () {
-    $scope.game.questions = [];
+    $scope.formGame.questions = [];
     angular.forEach($scope.questions, function(value, key) {
       if (value.checked == true) {
-        $scope.game.questions.push(value._id);
+        $scope.formGame.questions.push(value._id);
       }
     });
   };
@@ -129,11 +133,19 @@ angular.module('Game')
     });
   };
 
-  $scope.updateGame = function (game, index) {
+  $scope.updateGameInForm = function (game, index) {
+    game.index = index;
+    $scope.formGame = angular.copy(game);
+  };
+
+  $scope.updateGame = function (game) {
+    var index = game.index;
+    game.status = "NOT_STARTED";
     GameService.putGame(game).then(function(response) {
       var game = response.data;
       stopCountDown(game);
       $scope.games[index] = game;
+      $scope.initForm();
     });
   };
 

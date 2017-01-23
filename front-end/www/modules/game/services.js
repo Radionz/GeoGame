@@ -162,7 +162,7 @@ function startCountDown(game, $interval) {
     game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
     var watchTimeRemaining = $interval(function(){
       game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
-      if(game.timeElapsed<=0){
+      if(game.timeElapsed <= 0){
         $interval.cancel(watchTimeRemaining);
         game.status = "ENDED";
       }

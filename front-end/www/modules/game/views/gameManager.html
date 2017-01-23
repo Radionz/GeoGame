@@ -19,7 +19,7 @@
                 <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED' || game.status == 'ENDED'" ng-click="deleteGame(game._id, $index)">Delete</button>
                 <button class="button icon-left ion-log-in button-small button-balanced pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED' || game.status == 'ENDED'" ng-click="startGame(game, $index)">Start</button>
                 <button class="button icon-left ion-log-out button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'STARTED'" ng-click="stopGame(game, $index)">Stop</button>
-                <button class="button icon-left ion-edit button-small button-calm pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED'" ng-click="updateGame(game, $index)">Modify</button>
+                <button class="button icon-left ion-edit button-small button-calm pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED'" ng-click="updateGameInForm(game, $index)">Modify</button>
 
                 <div style="clear: both;"></div>
               </li>
@@ -30,13 +30,16 @@
       <div class="col-67">
         <div class="card">
 
-          <div class="item item-divider">
+          <div ng-hide="formGame._id" class="item item-divider">
             Create a new game
+          </div>
+          <div ng-show="formGame._id" class="item item-divider">
+            Update an existing game
           </div>
 
           <label class="item item-input item-floating-label">
             <span class="input-label">Name</span>
-            <input type="text" placeholder="Name" ng-model="game.name">
+            <input type="text" placeholder="Name" ng-model="formGame.name">
           </label>
 
           <div class="item item-divider">
@@ -53,9 +56,7 @@
                 </ion-checkbox>
               </div>
             </ion-list>
-
           </div>
-
           <div class="item item-divider">
             Settings
           </div>
@@ -63,19 +64,20 @@
             <div class="list">
               <div class="item range range-positive">
                 <i class="icon ion-ios-clock-outline"></i>
-                <input type="range" name="duration" min="0" max="120" value="90" ng-change="computeHourAndMinutes()" ng-model="game.duration">
-                <span style="width: 60px;">{{game.duration}} min</span>
-                <!-- <span ng-show="gameSettings.hours > 0">{{gameSettings.hours}}h</span><span ng-show="gameSettings.minutes > 0">{{gameSettings.minutes}}</span><span ng-hide="gameSettings.hours > 0">min</span> -->
+                <input type="range" name="duration" min="0" max="120" value="90" ng-change="computeHourAndMinutes()" ng-model="formGame.duration">
+                <span style="width: 60px;">{{formGame.duration}} min</span>
               </div>
               <div class="item range range-positive">
                 <i class="icon ion-ios-people"></i>
-                <input type="range" name="nb_player" min="0" max="15" value="5" ng-model="game.playerNb">
-                <span style="width: 60px;">{{game.playerNb}} pers</span>
+                <input type="range" name="nb_player" min="0" max="15" value="5" ng-model="formGame.playerNb">
+                <span style="width: 60px;">{{formGame.playerNb}} pers</span>
               </div>
             </div>
           </div>
           <div class="item item-divider">
-            <button type="submit" class="button button-full button-balanced" ng-click="createGame(game)">Create !</button>
+            <button type="submit" class="button button-full button-balanced" ng-hide="formGame._id" ng-click="createGame(formGame)">Create !</button>
+            <button type="submit" class="button button-full button-calm" ng-show="formGame._id" ng-click="updateGame(formGame)">Update !</button>
+            <button class="button icon-left ion-close-round button-small button-assertive pull-right" style="float: right" ng-show="formGame._id" ng-click="initForm()">Clear form</button>
           </div>
         </div>
 
