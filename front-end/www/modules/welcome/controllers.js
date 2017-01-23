@@ -4,11 +4,11 @@ angular.module('Welcome')
 
   $scope.$on("$ionicView.enter", function(event, data){
 
-    GameService.getGames($scope);
-    $scope.$on('getGamesOK', function (event, data) {
-      $scope.games = data;
-    });
+    GameService.getGames($scope).then(function(response) {
+      var games = response.data;
+      $scope.games = games;
 
+    });
   });
 
 });

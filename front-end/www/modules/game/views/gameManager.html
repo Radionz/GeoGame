@@ -14,9 +14,13 @@
                 <p ng-show="game.status == 'STARTED'">{{game.scoreBoard.length}}/{{game.playerNb}} player(s)</p>
                 <p ng-show="game.status == 'STARTED'">Started at {{game.started_at | date:'HH:mm'}} ({{game.timeElapsed | date:'HH:mm:ss'}} remaining)</p>
                 <span class="badge badge-calm">Status: {{game.status}}</span>
-                <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-click="deleteGame(game._id, $index)">Delete</button>
+
+                <br>
+                <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED'" ng-click="deleteGame(game._id, $index)">Delete</button>
                 <button class="button icon-left ion-log-in button-small button-balanced pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED' || game.status == 'ENDED'" ng-click="startGame(game, $index)">Start</button>
                 <button class="button icon-left ion-log-out button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'STARTED'" ng-click="stopGame(game, $index)">Stop</button>
+                <button class="button icon-left ion-edit button-small button-calm pull-right" style="float: right; margin-right: 16px;" ng-show="game.status == 'NOT_STARTED'" ng-click="updateGame(game, $index)">Modify</button>
+
                 <div style="clear: both;"></div>
               </li>
             </ul>

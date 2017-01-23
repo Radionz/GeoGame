@@ -129,6 +129,14 @@ angular.module('Game')
     });
   };
 
+  $scope.updateGame = function (game, index) {
+    GameService.putGame(game).then(function(response) {
+      var game = response.data;
+      stopCountDown(game);
+      $scope.games[index] = game;
+    });
+  };
+
   $scope.deleteGame = function (id, index) {
     GameService.deleteGame(id).then(function(response) {
       $scope.games.splice(index, 1);
