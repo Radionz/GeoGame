@@ -15,6 +15,18 @@ angular.module('Question')
         $scope.$emit('getQuestionsKO', error);
       });
     },
+    getQuestion: function($scope, id) {
+      $http({
+        url: ServerEndpoint.url + "/question/" + id,
+        method: "GET"
+      }).success(function(data) {
+        $scope.$emit('getQuestionOK', data);
+      })
+      .error(function(error, status){
+        console.log('ERR | getQuestion - Problème de communication avec le serveur.');
+        $scope.$emit('getQuestionKO', error);
+      });
+    },
     postQuestion: function($scope, question) {
       $http({
         url: ServerEndpoint.url + "/question",

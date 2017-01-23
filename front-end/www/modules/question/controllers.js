@@ -109,6 +109,8 @@ angular.module('Question')
       $( "input[placeholder='Latitude']" ).val(event.latLng.lat());
       $( "input[placeholder='Latitude']" ).siblings('span').addClass('has-input');
     });
+
+    addYourLocationButton($scope.map);
   }
 
   function addQuestionToMap(question) {
@@ -137,8 +139,6 @@ angular.module('Question')
     marker.addListener('click', function() {
       infowindow.open($scope.map, marker);
     });
-
-    addYourLocationButton($scope.map);
   }
 
   $scope.deleteQuestion = function (id, index) {
