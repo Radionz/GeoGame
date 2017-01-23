@@ -18,12 +18,10 @@ angular.module('Game')
     GameService.getGame($scope, gameId);
     $scope.$on('getGameOK', function (event, data) {
       $scope.game = data;
-      console.log($scope.game.questions);
       angular.forEach($scope.game.questions, function(value) {
         QuestionService.getQuestion($scope, value);
       });
       $scope.$on('getQuestionOK', function (event, data) {
-        console.log(data);
         addQuestionToMap(data);
       });
     });
@@ -74,14 +72,6 @@ angular.module('Game')
   $scope.game = {};
   $scope.game.duration = 90;
   $scope.game.playerNb = 5;
-
-  // $scope.computeHourAndMinutes = function () {
-  //   var hours = Math.floor( $scope.gameSettings.duration / 60),
-  //   minutes = $scope.gameSettings.duration % 60;
-  //
-  //   $scope.gameSettings.hours = hours;
-  //   $scope.gameSettings.minutes = minutes;
-  // }
 
   $scope.$on("$ionicView.enter", function(event, data){
     GameService.getGames($scope);
@@ -156,6 +146,7 @@ angular.module('Game')
   };
 
   $scope.stopGame = function (game, index) {
+    GameService.stopGame($scope, game);
     $scope.$on('stopGameOK', function (event, data) {
       data.timeElapsed = "00:00:00";
       $scope.games[index] = data;
