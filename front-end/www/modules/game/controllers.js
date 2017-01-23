@@ -15,15 +15,20 @@ angular.module('Game')
     initMap();
 
     var gameId = $stateParams.id;
-    GameService.getGame($scope, gameId);
-    $scope.$on('getGameOK', function (event, data) {
-      $scope.game = data;
-      angular.forEach($scope.game.questions, function(value) {
-        QuestionService.getQuestion($scope, value);
+    GameService.getGame(gameId).then(function(response) {
+      var game = response.data;
+      game.questionsBody = [];
+
+      angular.forEach(game.questions, function(questionId) {
+        QuestionService.getQuestion($scope, questionId);
       });
-      $scope.$on('getQuestionOK', function (event, data) {
-        addQuestionToMap(data);
+
+      $scope.$on('getQuestionOK', function (event, question) {
+        game.questionsBody.push(question);
+        addQuestionToMap(question);
       });
+
+      $scope.game = game;
     });
   });
 
@@ -74,20 +79,21 @@ angular.module('Game')
   $scope.game.playerNb = 5;
 
   $scope.$on("$ionicView.enter", function(event, data){
-    GameService.getGames($scope);
-    $scope.$on('getGamesOK', function (event, games) {
-      $scope.games = games;
+    GameService.getGames().then(function(response) {
+      var games = response.data;
 
+      //If the game is started we start the count down of play time remaining
       angular.forEach(games, function(game) {
         startCountDown(game, $interval);
       });
+
       $scope.games = games;
     });
 
-    QuestionService.getQuestions($scope);
-    $scope.$on('getQuestionsOK', function (event, data) {
-      $scope.questions = data;
-    })
+    QuestionService.getQuestions();
+    $scope.$on('getQuestionsOK', function (event, questions) {
+        $scope.questions = questions;
+    });
   });
 
   $scope.questionSelected = function () {
@@ -100,34 +106,33 @@ angular.module('Game')
   };
 
   $scope.createGame = function (game) {
-    GameService.postGame($scope, game);
-    $scope.$on('postGameOK', function (event, data) {
-      startCountDown(data, $interval);
-      $scope.games.push(data);
-    })
+    GameService.postGame(game).then(function(response) {
+      var game = response.data;
+      startCountDown(game, $interval);
+      $scope.games.push(game);
+    });
   };
 
   $scope.startGame = function (game, index) {
-    GameService.startGame($scope, game);
-    $scope.$on('startGameOK', function (event, data) {
-      startCountDown(data, $interval);
-      $scope.games[index] = data;
-    })
+    GameService.startGame(game).then(function(response) {
+      var game = response.data;
+      startCountDown(game, $interval);
+      $scope.games[index] = game;
+    });
   };
 
   $scope.stopGame = function (game, index) {
-    GameService.stopGame($scope, game);
-    $scope.$on('stopGameOK', function (event, data) {
-      stopCountDown();
-      $scope.games[index] = data;
-    })
+    GameService.stopGame(game).then(function(response) {
+      var game = response.data;
+      stopCountDown(game);
+      $scope.games[index] = game;
+    });
   };
 
   $scope.deleteGame = function (id, index) {
-    GameService.deleteGame($scope, id);
-    $scope.$on('deleteGameOK', function (event, data) {
+    GameService.deleteGame(id).then(function(response) {
       $scope.games.splice(index, 1);
-    })
+    });
   };
 
 });

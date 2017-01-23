@@ -15,6 +15,7 @@ angular.module('Question')
         $scope.$emit('getQuestionsKO', error);
       });
     },
+
     getQuestion: function($scope, id) {
       $http({
         url: ServerEndpoint.url + "/question/" + id,
@@ -27,6 +28,7 @@ angular.module('Question')
         $scope.$emit('getQuestionKO', error);
       });
     },
+
     postQuestion: function($scope, question) {
       $http({
         url: ServerEndpoint.url + "/question",
@@ -40,6 +42,7 @@ angular.module('Question')
         $scope.$emit('postQuestionKO', error);
       });
     },
+
     deleteQuestion: function($scope, id) {
       $http({
         url: ServerEndpoint.url + "/question/" + id,

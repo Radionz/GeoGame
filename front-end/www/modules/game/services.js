@@ -2,98 +2,63 @@ angular.module('Game')
 
 .factory('GameService', function($http, ServerEndpoint){
   return {
-    getGames: function($scope) {
-      $http({
+
+    getGames: function() {
+      return $http({
         url: ServerEndpoint.url + "/game",
         method: "GET"
-      }).success(function(data) {
-        $scope.$emit('getGamesOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | getGames - Problème de communication avec le serveur.');
-        $scope.$emit('getGamesKO', error);
       });
     },
-    getGame: function($scope, id) {
-      $http({
+
+    getGame: function(id) {
+      return $http({
         url: ServerEndpoint.url + "/game/"+id,
         method: "GET"
-      }).success(function(data) {
-        $scope.$emit('getGameOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | getGame - Problème de communication avec le serveur.');
-        $scope.$emit('getGameKO', error);
       });
     },
-    postGame: function($scope, game) {
-      $http({
+
+    postGame: function(game) {
+      return $http({
         url: ServerEndpoint.url + "/game",
         method: "POST",
         data: game
-      }).success(function(data) {
-        $scope.$emit('postGameOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | postGame - Problème de communication avec le serveur.');
-        $scope.$emit('postGameKO', error);
       });
     },
-    putGame: function($scope, game) {
-      $http({
+
+    putGame: function(game) {
+      return $http({
         url: ServerEndpoint.url + "/game/"+game._id,
         method: "PUT",
         data: game
-      }).success(function(data) {
-        $scope.$emit('putGameOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | putGame - Problème de communication avec le serveur.');
-        $scope.$emit('putGameKO', error);
       });
     },
-    startGame: function($scope, game) {
+
+    startGame: function(game) {
       game.status = "STARTED";
       game.started_at = (+ new Date());
-      $http({
+      return $http({
         url: ServerEndpoint.url + "/game/"+game._id,
         method: "PUT",
         data: game
-      }).success(function(data) {
-        console.log(data);
-        $scope.$emit('startGameOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | startGame - Problème de communication avec le serveur.');
-        $scope.$emit('startGameKO', error);
       });
     },
-    stopGame: function($scope, game) {
+
+    stopGame: function(game) {
       game.status = "NOT_STARTED";
-      $http({
+      return $http({
         url: ServerEndpoint.url + "/game/"+game._id,
         method: "PUT",
         data: game
-      }).success(function(data) {
-        $scope.$emit('stopGameOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | stopGame - Problème de communication avec le serveur.');
-        $scope.$emit('stopGameKO', error);
       });
     },
-    deleteGame: function($scope, id) {
-      $http({
+
+    deleteGame: function(id) {
+      return $http({
         url: ServerEndpoint.url + "/game/" + id,
         method: "DELETE"
-      }).success(function(data) {
-        $scope.$emit('deleteGameOK', data);
-      })
-      .error(function(error, status){
-        console.log('ERR | deleteGame - Problème de communication avec le serveur.');
-        $scope.$emit('deleteGameKO', error);
       });
     }
+
   };
 });
 
@@ -204,6 +169,6 @@ function startCountDown(game, $interval) {
   }
 }
 
-function stopCountDown() {
+function stopCountDown(game) {
   game.timeElapsed = "00:00:00";
 }
