@@ -158,9 +158,10 @@ function addViewScoreBoardButton(map) {
 function startCountDown(game, $interval) {
   game.timeElapsed = "00:00:00";
   if (game.status == "STARTED") {
-    var endTime = (+ new Date(game.started_at)) + (game.duration*60*1000);
+    var endTime = new Date(game.started_at).getTime() + (game.duration*60*1000);
+    game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
     var watchTimeRemaining = $interval(function(){
-      game.timeElapsed = new Date(endTime) - new Date();
+      game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
       if(game.timeElapsed<=0){
         $interval.cancel(watchTimeRemaining);
         game.status = "ENDED";

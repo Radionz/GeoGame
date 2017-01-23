@@ -7,8 +7,8 @@ angular.module('Welcome')
     GameService.getGames($scope).then(function(response) {
       var games = response.data;
       $scope.games = games;
-
     });
+
   });
 
 });
