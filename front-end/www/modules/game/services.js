@@ -60,6 +60,7 @@ angular.module('Game')
         method: "PUT",
         data: game
       }).success(function(data) {
+        console.log(data);
         $scope.$emit('startGameOK', data);
       })
       .error(function(error, status){
@@ -69,7 +70,6 @@ angular.module('Game')
     },
     stopGame: function($scope, game) {
       game.status = "NOT_STARTED";
-      GameService.stopGame($scope, game);
       $http({
         url: ServerEndpoint.url + "/game/"+game._id,
         method: "PUT",
@@ -188,4 +188,22 @@ function addViewScoreBoardButton(map) {
 
   controlDiv.index = 1;
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(controlDiv);
+}
+
+function startCountDown(game, $interval) {
+  game.timeElapsed = "00:00:00";
+  if (game.status == "STARTED") {
+    var endTime = (+ new Date(game.started_at)) + (game.duration*60*1000);
+    var watchTimeRemaining = $interval(function(){
+      game.timeElapsed = new Date(endTime) - new Date();
+      if(game.timeElapsed<=0){
+        $interval.cancel(watchTimeRemaining);
+        game.status = "ENDED";
+      }
+    }, 1000);
+  }
+}
+
+function stopCountDown() {
+  game.timeElapsed = "00:00:00";
 }

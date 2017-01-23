@@ -29,7 +29,7 @@ router.get('/:id', function(req, res, next) {
 
 /* PUT /question/:id */
 router.put('/:id', function(req, res, next) {
-    Game.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
+    Game.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, post) {
         if (err) return next(err);
         res.json(post);
     });

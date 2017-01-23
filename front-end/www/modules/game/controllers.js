@@ -79,17 +79,7 @@ angular.module('Game')
       $scope.games = games;
 
       angular.forEach(games, function(game) {
-        game.timeElapsed = "00:00:00";
-        if (game.status == "STARTED") {
-          var endTime = (+ new Date(game.started_at)) + (game.duration*60*1000);
-          var watchTimeRemaining = $interval(function(){
-            game.timeElapsed = new Date(endTime) - new Date();
-            if(game.timeElapsed<=0){
-              $interval.cancel(watchTimeRemaining);
-              game.status = "ENDED";
-            }
-          }, 1000);
-        }
+        startCountDown(game, $interval);
       });
       $scope.games = games;
     });
@@ -112,17 +102,7 @@ angular.module('Game')
   $scope.createGame = function (game) {
     GameService.postGame($scope, game);
     $scope.$on('postGameOK', function (event, data) {
-      data.timeElapsed = "00:00:00";
-      if (data.status == "STARTED") {
-        var endTime = (+ new Date(data.started_at)) + (data.duration*60*1000);
-        var watchTimeRemaining = $interval(function(){
-          data.timeElapsed = new Date(endTime) - new Date();
-          if(data.timeElapsed<=0){
-            $interval.cancel(watchTimeRemaining);
-            data.status = "ENDED";
-          }
-        }, 1000);
-      }
+      startCountDown(data, $interval);
       $scope.games.push(data);
     })
   };
@@ -130,17 +110,7 @@ angular.module('Game')
   $scope.startGame = function (game, index) {
     GameService.startGame($scope, game);
     $scope.$on('startGameOK', function (event, data) {
-      data.timeElapsed = "00:00:00";
-      if (data.status == "STARTED") {
-        var endTime = (+ new Date(data.started_at)) + (data.duration*60*1000);
-        var watchTimeRemaining = $interval(function(){
-          data.timeElapsed = new Date(endTime) - new Date();
-          if(data.timeElapsed<=0){
-            $interval.cancel(watchTimeRemaining);
-            data.status = "ENDED";
-          }
-        }, 1000);
-      }
+      startCountDown(data, $interval);
       $scope.games[index] = data;
     })
   };
@@ -148,7 +118,7 @@ angular.module('Game')
   $scope.stopGame = function (game, index) {
     GameService.stopGame($scope, game);
     $scope.$on('stopGameOK', function (event, data) {
-      data.timeElapsed = "00:00:00";
+      stopCountDown();
       $scope.games[index] = data;
     })
   };
