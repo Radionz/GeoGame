@@ -12,13 +12,13 @@ angular.module('Question')
   $scope.$on("$ionicView.enter", function(event, data){
     initMap();
 
-    QuestionService.getQuestions($scope);
-    $scope.$on('getQuestionsOK', function (event, data) {
-      $scope.questions = data;
-      angular.forEach(data, function(value, key) {
-        addQuestionToMap(value);
-      });
-    })
+    QuestionService.getQuestions($scope).then(function(response) {
+        var questions = response.data;
+        $scope.questions = questions;
+        angular.forEach(questions, function(question) {
+          addQuestionToMap(question);
+        });
+    });
 
     $scope.question = {};
     $scope.question.loc = {};
@@ -26,11 +26,11 @@ angular.module('Question')
   });
 
   $scope.createQuestion = function (question) {
-    QuestionService.postQuestion($scope, question);
-    $scope.$on('postQuestionOK', function (event, data) {
-      $scope.questions.push(data);
-      addQuestionToMap(data);
-    })
+    QuestionService.postQuestion($scope, question).then(function(response) {
+        var question = response.data;
+        $scope.questions.push(question);
+        addQuestionToMap(question);
+    });
   }
 
   function addYourLocationButton(map)
@@ -142,10 +142,9 @@ angular.module('Question')
   }
 
   $scope.deleteQuestion = function (id, index) {
-    QuestionService.deleteQuestion($scope, id);
-    $scope.$on('deleteQuestionOK', function (event, data) {
-      $scope.questions.splice(index, 1);
-    })
+    QuestionService.deleteQuestion($scope, id).then(function() {
+        $scope.questions.splice(index, 1);
+    });
   }
 
   $scope.centerOnQuestion = function (location) {

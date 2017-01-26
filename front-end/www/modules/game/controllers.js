@@ -20,12 +20,11 @@ angular.module('Game')
       game.questionsBody = [];
 
       angular.forEach(game.questions, function(questionId) {
-        QuestionService.getQuestion($scope, questionId);
-      });
-
-      $scope.$on('getQuestionOK', function (event, question) {
-        game.questionsBody.push(question);
-        addQuestionToMap(question);
+        QuestionService.getQuestion($scope, questionId).then(function(response) {
+            var question = response.data;
+            game.questionsBody.push(question);
+            addQuestionToMap(question);
+        });
       });
 
       $scope.game = game;
