@@ -85,9 +85,9 @@ angular.module('Game')
       $scope.games = games;
     });
 
-    QuestionService.getQuestions();
-    $scope.$on('getQuestionsOK', function (event, questions) {
-      $scope.questions = questions;
+    QuestionService.getQuestions().then(function(response) {
+        var questions = response.data;
+        $scope.questions = questions;
     });
 
     $scope.initForm();
@@ -95,6 +95,9 @@ angular.module('Game')
 
   $scope.initForm = function () {
     $scope.formGame = {};
+    angular.forEach($scope.questions, function(question) {
+      question.checked = false;
+    });
     $scope.formGame.duration = 90;
     $scope.formGame.playerNb = 5;
   }
@@ -113,6 +116,7 @@ angular.module('Game')
       var game = response.data;
       startCountDown(game, $interval);
       $scope.games.push(game);
+      $scope.initForm();
     });
   };
 
@@ -133,7 +137,15 @@ angular.module('Game')
   };
 
   $scope.updateGameInForm = function (game, index) {
+    $scope.initForm();
     game.index = index;
+    angular.forEach(game.questions, function(questionId) {
+        angular.forEach($scope.questions, function(question) {
+            if (question._id == questionId) {
+                question.checked = true;
+            }
+        });
+    });
     $scope.formGame = angular.copy(game);
   };
 
