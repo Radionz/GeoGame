@@ -26,9 +26,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
 })
 
 .constant('ServerEndpoint', {
-        url: 'http://localhost:8080'
-        //url: 'http://server_url:8080'
-    })
+    url: 'http://localhost:8080'
+    //url: 'http://server_url:8080'
+})
 
 .config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
@@ -45,6 +45,33 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
             'menuContent': {
                 templateUrl: 'modules/welcome/views/welcome.html',
                 controller: 'WelcomeCtrl'
+            }
+        }
+    })
+    .state('app.signIn', {
+        url : '/sign-in',
+        views: {
+            'menuContent' :{
+                templateUrl: "modules/welcome/views/sign-in.html",
+                controller: 'SignInCtrl'
+            }
+        }
+    })
+    .state('app.signUp', {
+        url : '/sign-up',
+        views: {
+            'menuContent' :{
+                templateUrl: "modules/welcome/views/sign-up.html",
+                controller: 'SignUpCtrl'
+            }
+        }
+    })
+    .state('app.forgotPassword', {
+        url : '/forgot-password',
+        views: {
+            'menuContent' :{
+                templateUrl: "modules/welcome/views/forgot-password.html",
+                controller: 'ForgotPasswordCtrl'
             }
         }
     })
@@ -76,5 +103,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
         }
     });
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/welcome');
+    $urlRouterProvider.otherwise('/app/sign-in');
 });

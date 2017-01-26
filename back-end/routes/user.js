@@ -28,8 +28,8 @@ router.get('/:id', function(req, res, next) {
 });
 
 /* GET /user/email */
-router.get('/:email', function(req, res, next) {
-    User.findByEmail(req.params.id, function (err, post) {
+router.get('/email/:email', function(req, res, next) {
+    User.findOne({ email: req.params.email }, function (err, post) {
         if (err) return next(err);
         res.json(post);
     });
