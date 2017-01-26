@@ -3,28 +3,28 @@ angular.module('Welcome')
 .factory('UserService', function($http, ServerEndpoint){
     return {
 
-        getUsers: function($scope) {
+        getUsers: function() {
             return $http({
                 url: ServerEndpoint.url + "/user",
                 method: "GET"
             });
         },
 
-        getUser: function($scope, id) {
+        getUser: function(id) {
             return $http({
                 url: ServerEndpoint.url + "/user/" + id,
                 method: "GET"
             });
         },
 
-        getUserByEmail: function($scope, email) {
+        getUserByEmail: function(email) {
             return $http({
                 url: ServerEndpoint.url + "/user/email/" + email,
                 method: "GET"
             });
         },
 
-        postUser: function($scope, user) {
+        postUser: function(user) {
             return $http({
                 url: ServerEndpoint.url + "/user",
                 method: "POST",
@@ -32,7 +32,7 @@ angular.module('Welcome')
             });
         },
 
-        deleteUser: function($scope, id) {
+        deleteUser: function(id) {
             return $http({
                 url: ServerEndpoint.url + "/user/" + id,
                 method: "DELETE"

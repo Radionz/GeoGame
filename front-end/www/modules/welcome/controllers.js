@@ -13,19 +13,33 @@ angular.module('Welcome')
 
 })
 
-.controller('SignInCtrl', function($scope, $ionicPopup, UserService) {
+.controller('SignInCtrl', function($scope, $rootScope, $state, $ionicHistory, $ionicPopup, UserService) {
 
     $scope.$on("$ionicView.enter", function(event, data){
         $scope.user = {};
     });
 
     $scope.signIn = function (user) {
-        console.log(user);
+        UserService.getUserByEmail(user.username).then(function(response) {
+            var user = response.data;
+            if (user == null) {
+                $ionicPopup.alert({
+                    title: "Username or password invalid",
+                    template: "Please check your credentials"
+                });
+            }else {
+                delete user.password;
+                $rootScope.loggedInUser = user;
 
-        $ionicPopup.alert({
-            title: "Username or password invalid",
-            template: "Please check your credentials"
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
+
+                $state.go('app.welcome');
+            }
+
         });
+
     };
 
 })
