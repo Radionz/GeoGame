@@ -3,21 +3,21 @@ angular.module('Question')
 .factory('QuestionService', function($http, ServerEndpoint){
   return {
 
-    getQuestions: function($scope) {
+    getQuestions: function() {
       return $http({
         url: ServerEndpoint.url + "/question",
         method: "GET"
     });
     },
 
-    getQuestion: function($scope, id) {
+    getQuestion: function(id) {
       return $http({
         url: ServerEndpoint.url + "/question/" + id,
         method: "GET"
       });
     },
 
-    postQuestion: function($scope, question) {
+    postQuestion: function(question) {
       return $http({
         url: ServerEndpoint.url + "/question",
         method: "POST",
@@ -25,7 +25,7 @@ angular.module('Question')
       });
     },
 
-    deleteQuestion: function($scope, id) {
+    deleteQuestion: function(id) {
       return $http({
         url: ServerEndpoint.url + "/question/" + id,
         method: "DELETE"
