@@ -1,0 +1,20 @@
+<ion-view view-title="Sign In">
+    <ion-content padding="true">
+        <form ng-submit="signIn(user)">
+            <div class="list">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Username</span>
+                    <input type="text" placeholder="Username" ng-model="user.username">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Password</span>
+                    <input type="password" placeholder="Password" ng-model="user.password">
+                </label>
+            </div>
+            <button type="submit" class="button button-block button-positive">Sign in</button>
+        </form>
+        <p class="text-center">
+            <a href="#/app/sign-up">Sign up</a>&nbsp&nbsp<a href="#/app/forgot-password">Forgot password ?</a>
+        </p>
+    </ion-content>
+</ion-view>
