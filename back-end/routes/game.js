@@ -3,15 +3,15 @@ var router = express.Router();
 
 var Game = require('../models/Game.js');
 
-/* GET /question listing. */
+/* GET /game listing. */
 router.get('/', function(req, res, next) {
-    Game.find(function (err, question) {
+    Game.find(function (err, game) {
         if (err) return next(err);
-        res.json(question);
+        res.json(game);
     });
 });
 
-/* POST /question */
+/* POST /game */
 router.post('/', function(req, res, next) {
     Game.create(req.body, function (err, post) {
         if (err) return next(err);
@@ -19,7 +19,7 @@ router.post('/', function(req, res, next) {
     });
 });
 
-/* GET /question/id */
+/* GET /game/id */
 router.get('/:id', function(req, res, next) {
     Game.findById(req.params.id, function (err, post) {
         if (err) return next(err);
@@ -27,7 +27,7 @@ router.get('/:id', function(req, res, next) {
     });
 });
 
-/* PUT /question/:id */
+/* PUT /game/:id */
 router.put('/:id', function(req, res, next) {
     Game.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, post) {
         if (err) return next(err);
@@ -35,7 +35,7 @@ router.put('/:id', function(req, res, next) {
     });
 });
 
-/* DELETE /question/:id */
+/* DELETE /game/:id */
 router.delete('/:id', function(req, res, next) {
     Game.findByIdAndRemove(req.params.id, req.body, function (err, post) {
         if (err) return next(err);
