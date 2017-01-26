@@ -4,7 +4,8 @@ http = require('http'),
 mongoose = require('mongoose');
 
 var question = require('./routes/question'),
-game = require('./routes/game');
+game = require('./routes/game'),
+user = require('./routes/user');
 
 var PORT = 8080;
 var MONGODB_URL = "mongodb://localhost";
@@ -13,7 +14,7 @@ var MONGODB_URL = "mongodb://localhost";
 mongoose.Promise = global.Promise;
 
 // connect to MongoDB
-mongoose.connect(MONGODB_URL + '/question-api')
+mongoose.connect(MONGODB_URL + '/geogame-api')
 .then(() =>  console.log('Connection successful to mongodb.'))
 .catch((err) => console.error(err));
 
@@ -45,6 +46,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 */
 app.use('/question', question);
 app.use('/game', game);
+app.use('/user', user);
 
 app.set('port', PORT);
 
