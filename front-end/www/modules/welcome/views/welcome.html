@@ -1,6 +1,5 @@
-<ion-view view-title="Welcome to GeoGame">
+<ion-view view-title="Welcome to GeoGame {{$root.loggedInUser.name}}">
   <ion-content>
-
     <div class="row">
       <div class="col">
         <div class="card">
@@ -11,6 +10,9 @@
             <ul class="list">
               <li class="item" ng-repeat="game in games" ng-show="game.status == 'STARTED'">
                 <h2><a href="#/app/game/{{game._id}}">{{game.name}}</a></h2>
+                <p>{{game.questions.length}} question(s)</p>
+                <p ng-show="game.status == 'STARTED'">{{game.scoreBoard.length}}/{{game.playerNb}} player(s)</p>
+                <p ng-show="game.status == 'STARTED'">Started at {{game.started_at | date:'HH:mm'}} ({{game.timeElapsed | date:'HH:mm:ss'}} remaining)</p>
               </li>
             </ul>
           </div>
