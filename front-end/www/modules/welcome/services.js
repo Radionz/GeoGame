@@ -19,7 +19,7 @@ angular.module('Welcome')
 
         getUserByEmail: function($scope, email) {
             return $http({
-                url: ServerEndpoint.url + "/user/" + email,
+                url: ServerEndpoint.url + "/user/email/" + email,
                 method: "GET"
             });
         },
