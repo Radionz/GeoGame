@@ -7,7 +7,7 @@ var question = require('./routes/question'),
 game = require('./routes/game'),
 user = require('./routes/user');
 
-var PORT = 8080;
+var PORT = 8081;
 var MONGODB_URL = "mongodb://localhost";
 
 // Use native Node promises
