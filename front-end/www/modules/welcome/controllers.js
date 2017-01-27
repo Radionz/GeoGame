@@ -14,13 +14,27 @@ angular.module('Welcome')
             $scope.games = games;
         });
     });
+
+    $scope.alreadyIn = function (game) {
+      var alreadyIn = false;
+      angular.forEach(game.scoreBoard, function(scoreBoardEntry) {
+        if (scoreBoardEntry.userId == $rootScope.loggedInUser._id) {
+          alreadyIn = true;
+        }
+      });
+      return alreadyIn;
+    }
+
+    $scope.isFull = function (game) {
+      return game.scoreBoard.length >= game.playerNb;
+    }
 })
 
 .controller('SignInCtrl', function($scope, $rootScope, $state, $ionicHistory, $ionicPopup, UserService) {
 
     $scope.$on("$ionicView.enter", function(event, data){
         initSkewTitle();
-        
+
         if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
             UserService.getUser(localStorage.getItem("userId")).then(function(response) {
                 var user = response.data;

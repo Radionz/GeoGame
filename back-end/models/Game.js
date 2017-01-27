@@ -1,7 +1,11 @@
+var ScoreBoardSchema = new mongoose.Schema({
+  userId: { type : String, required : true, index: {unique: true} },
+  score: { type : Number, default: 0 },
+});
 var GameSchema = new mongoose.Schema({
     name: { type : String, required : true, index: {unique: true} },
     questions: [String],
-    scoreBoard: [{user: String, score: Number}],
+    scoreBoard: [ScoreBoardSchema],
     duration: { type : Number, default: 90 },
     playerNb: { type : Number, default: 5 },
     status: { type : String, default : 'NOT_STARTED' },

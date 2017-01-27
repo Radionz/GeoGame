@@ -3,7 +3,8 @@
     <div class="row responsive-md">
       <div class="col-33">
         <div class="card">
-          <div class="item item-divider">
+          <div class="item item-divider item-icon-right" style=" background-color: #e2e5ea;">
+            <i class="icon ion-map"></i>
             Game's list
           </div>
           <div class="item item-text-wrap">
@@ -31,10 +32,10 @@
       <div class="col-67">
         <div class="card">
 
-          <div ng-hide="formGame._id" class="item item-divider">
+          <div ng-hide="formGame._id" class="item item-divider" style=" background-color: #e2e5ea;">
             Create a new game
           </div>
-          <div ng-show="formGame._id" class="item item-divider">
+          <div ng-show="formGame._id" class="item item-divider" style=" background-color: #e2e5ea;">
             Update an existing game
           </div>
 
@@ -43,7 +44,7 @@
             <input type="text" placeholder="Name" ng-model="formGame.name">
           </label>
 
-          <div class="item item-divider">
+          <div class="item item-divider" style=" background-color: #e2e5ea;">
             Questions
           </div>
           <div class="item">

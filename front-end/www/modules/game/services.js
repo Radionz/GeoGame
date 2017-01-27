@@ -147,12 +147,10 @@ function addViewScoreBoardButton(map) {
   controlText.innerHTML = 'Show ScoreBoard';
   controlUI.appendChild(controlText);
 
-  controlUI.addEventListener('click', function() {
-    console.log("clicked");
-  });
-
   controlDiv.index = 1;
   map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(controlDiv);
+
+  return controlUI;
 }
 
 function startCountDown(game, $interval) {

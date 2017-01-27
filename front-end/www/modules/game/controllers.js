@@ -1,6 +1,6 @@
 angular.module('Game')
 
-.controller('GameCtrl', function($scope, GameService, QuestionService, $stateParams) {
+.controller('GameCtrl', function($scope, $rootScope, $state, GameService, QuestionService, UserService, $stateParams, $ionicModal) {
 
   $('.scroll').height('100%');
 
@@ -12,24 +12,58 @@ angular.module('Game')
   };
 
   $scope.$on("$ionicView.enter", function(event, data){
-    initMap();
+    if (typeof $rootScope.loggedInUser === "undefined") {
+      $state.go("app.signIn");
+    }else {
+      initMap();
 
-    var gameId = $stateParams.id;
-    GameService.getGame(gameId).then(function(response) {
-      var game = response.data;
-      game.questionsBody = [];
+      var gameId = $stateParams.id;
+      GameService.getGame(gameId).then(function(response) {
+        var game = response.data;
 
-      angular.forEach(game.questions, function(questionId) {
-        QuestionService.getQuestion(questionId).then(function(response) {
+        UserService.getUser($rootScope.loggedInUser._id).then(function(response) {
+          var user = response.data;
+        });
+
+        var alreadyIn = false;
+        angular.forEach(game.scoreBoard, function(scoreBoardEntry) {
+          if (scoreBoardEntry.userId == $rootScope.loggedInUser._id) {
+            alreadyIn = true;
+            return;
+          }
+        });
+
+        if (!alreadyIn) {
+          var scoreBoardEntry = {};
+          scoreBoardEntry.userId = $rootScope.loggedInUser._id;
+          scoreBoardEntry.score = 0;
+          game.scoreBoard.push(scoreBoardEntry);
+
+          GameService.putGame(game).then(function(response) {
+          });
+        }
+
+        game.questionsBody = [];
+        angular.forEach(game.questions, function(questionId) {
+          QuestionService.getQuestion(questionId).then(function(response) {
             var question = response.data;
             game.questionsBody.push(question);
             addQuestionToMap(question);
+          });
         });
+
+        $scope.game = game;
       });
 
-      $scope.game = game;
-    });
+      console.log($rootScope.loggedInUser);
+
+      $scope.$on("$ionicView.leave", function(event, data){
+
+      });
+    }
   });
+
+
 
   function initMap() {
     $scope.map = new google.maps.Map(document.getElementById('map'), {
@@ -38,7 +72,17 @@ angular.module('Game')
       zoom: 14
     });
     addYourLocationButton($scope.map);
-    addViewScoreBoardButton($scope.map);
+
+    $ionicModal.fromTemplateUrl('modules/game/views/modal-scoreBoard.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
+
+    addViewScoreBoardButton($scope.map).addEventListener('click', function() {
+      $scope.modal.show();
+    });
   };
 
   function addQuestionToMap(question) {
@@ -86,8 +130,8 @@ angular.module('Game')
     });
 
     QuestionService.getQuestions().then(function(response) {
-        var questions = response.data;
-        $scope.questions = questions;
+      var questions = response.data;
+      $scope.questions = questions;
     });
 
     $scope.initForm();
@@ -140,11 +184,11 @@ angular.module('Game')
     $scope.initForm();
     game.index = index;
     angular.forEach(game.questions, function(questionId) {
-        angular.forEach($scope.questions, function(question) {
-            if (question._id == questionId) {
-                question.checked = true;
-            }
-        });
+      angular.forEach($scope.questions, function(question) {
+        if (question._id == questionId) {
+          question.checked = true;
+        }
+      });
     });
     $scope.formGame = angular.copy(game);
   };
