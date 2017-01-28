@@ -165,7 +165,7 @@ angular.module('Game')
   };
 
   $scope.startGame = function (game, index) {
-    GameService.startGame(game).then(function(response) {
+    GameService.startGame(game._id).then(function(response) {
       var game = response.data;
       startCountDown(game, $interval);
       $scope.games[index] = game;
@@ -173,7 +173,7 @@ angular.module('Game')
   };
 
   $scope.stopGame = function (game, index) {
-    GameService.stopGame(game).then(function(response) {
+    GameService.stopGame(game._id).then(function(response) {
       var game = response.data;
       stopCountDown(game);
       $scope.games[index] = game;

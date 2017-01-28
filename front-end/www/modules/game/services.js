@@ -26,27 +26,31 @@ angular.module('Game')
     },
 
     putGame: function(game) {
+      var gameId = game._id;
+      delete game._id;
       return $http({
-        url: ServerEndpoint.url + "/game/"+game._id,
+        url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
         data: game
       });
     },
 
-    startGame: function(game) {
+    startGame: function(gameId) {
+      var game = {};
       game.status = "STARTED";
       game.started_at = (+ new Date());
       return $http({
-        url: ServerEndpoint.url + "/game/"+game._id,
+        url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
         data: game
       });
     },
 
-    stopGame: function(game) {
+    stopGame: function(gameId) {
+      var game = {};
       game.status = "NOT_STARTED";
       return $http({
-        url: ServerEndpoint.url + "/game/"+game._id,
+        url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
         data: game
       });
