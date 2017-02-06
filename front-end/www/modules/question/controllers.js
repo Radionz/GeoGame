@@ -122,6 +122,14 @@ angular.module('Question')
       animation: google.maps.Animation.DROP
     });
 
+    var circle = new google.maps.Circle({
+      map: $scope.map,
+      center: marker.position,
+      radius: question.radius,    // 10 miles in metres
+      fillColor: '#AA0000',
+      fillOpacity: 0.5
+    });
+
     var contentString = '<div id="content">'+
     '<div id="siteNotice">'+
     '</div>'+

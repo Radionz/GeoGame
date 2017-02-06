@@ -66,6 +66,20 @@ angular.module('Game')
   };
 });
 
+function centerMap(position) {
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+}
+
+function errorHandler(err){
+  if(err.code == 1){
+    console.log("Error: Access is denied!");
+  }
+  else if(err.code == 2) {
+    console.log("Error: Position is unavailable!");
+  }
+}
+
 // Utils function
 function addYourLocationButton(map) {
   var controlDiv = document.createElement('div');
@@ -108,13 +122,19 @@ function addYourLocationButton(map) {
       else imgX = '-18';
       $('#you_location_img').css('background-position', imgX+'px 0px');
     }, 500);
+    var watchId;
+    var marker = new google.maps.Marker({
+      map: map
+    });
+
     if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        map.setCenter(latlng);
-        clearInterval(animationInterval);
-        $('#you_location_img').css('background-position', '-144px 0px');
-      });
+        watchId = navigator.geolocation.watchPosition( function(position){
+          var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          map.panTo(latlng);
+          marker.setPosition(latlng);
+          clearInterval(animationInterval);
+          $('#you_location_img').css('background-position', '-144px 0px');
+        });
     }
     else{
       clearInterval(animationInterval);

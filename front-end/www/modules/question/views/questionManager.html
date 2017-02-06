@@ -36,6 +36,11 @@
                                 <span class="input-label">Latitude</span>
                                 <input type="text" placeholder="Latitude" ng-model="question.loc.coordinates[1]">
                             </label>
+                          <div class="item range range-positive">
+                            <i class="icon ion-arrow-resize"></i>
+                            <input type="range" name="question-radius" min="0" max="1000" value="500" ng-model="question.radius">
+                            <span style="width: 60px;">{{question.radius}} meters</span>
+                          </div>
                         </div>
                     </div>
                     <div class="item item-divider">
