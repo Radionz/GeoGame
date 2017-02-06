@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var SimpleQuestionSchema = new mongoose.Schema({
     name: { type : String, required : true, index: {unique: true} },
     question: String,
+    radius: { type: Number, default: '10' },
     answer: String,
     nb_point: Number,
     loc: {
