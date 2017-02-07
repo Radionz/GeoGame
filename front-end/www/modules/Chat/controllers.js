@@ -41,10 +41,11 @@ angular.module('Chat')
 
 
     $scope.data = {};
-    $scope.myId = $rootScope.loggedInUser._id;
     $scope.messages = [];
     $ionicScrollDelegate.scrollBottom(true);
-
+    if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
+      $scope.myId = localStorage.getItem("userId");
+    }
 
 
     socket.on('message', function(message) {

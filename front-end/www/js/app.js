@@ -10,7 +10,17 @@ angular.module('Question', []);
 angular.module('Chat', []);
 angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question', 'Chat'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, UserService, $rootScope) {
+
+    if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
+      UserService.getUser(localStorage.getItem("userId")).then(function(response) {
+        var user = response.data;
+        delete user.password;
+        $rootScope.loggedInUser = user;
+        $scope.apply()
+      });
+    };
+
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
