@@ -1,18 +1,40 @@
 <ion-view view-title="Chat">
+
+  <link md-href="styles/chat.css" rel="stylesheet">
+
   <ion-content class="chat content-stable"
                  on-swipe-left="hideTime = false"
                  on-swipe-right="hideTime = true">
      <div ng-class="chat">
        <div ng-repeat="message in messages"
-            ng-class="{other: message.userId != myId}"
-            class="messages">
+            class="message-wrapper">
 
-         <div class="message" ng-class="{'slide-right': hideTime, '': !hideTime}">
-           <span>{{ message.text }}</span>
-         </div>
+            <div ng-if="message.userId == myId">
+                <img class="profile-pic left" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png"/>
 
-         <div class="time" ng-class="{'slide-right': hideTime, '': !hideTime}">{{message.time}}</div>
-
+                <div class="chat-bubble left">
+                  <div class="message" >
+                    <span>{{ message.text }}</span>
+                  </div>
+                  <div class="message-detail">
+                      <span class="bold">{{message.userId}}</span>,
+                      <span >{{message.time}}</span>
+                  </div>
+                </div>
+            </div>
+            <div ng-if="message.userId != myId">
+              <img class="profile-pic right" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" />
+                <div class="chat-bubble right" ng-if="message.userId != myId">
+                   <div class="message" >
+                     <span>{{ message.text }}</span>
+                   </div>
+                   <div class="message-detail">
+                       <span class="bold">{{message.userId}}</span>,
+                       <span >{{message.time}}</span>
+                   </div>
+                </div>
+           </div>
+           <div class="cf"></div>
        </div>
      </div>
 
