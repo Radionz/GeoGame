@@ -7,7 +7,8 @@
 angular.module('Welcome', []);
 angular.module('Game', []);
 angular.module('Question', []);
-angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question'])
+angular.module('Chat', []);
+angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question', 'Chat'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -99,6 +100,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
             'menuContent': {
                 templateUrl: 'modules/question/views/questionManager.html',
                 controller: 'QuestionManagerCtrl'
+            }
+        }
+    }).state('app.chat', {
+        url: '/chat',
+        views: {
+            'menuContent': {
+                templateUrl: 'modules/chat/views/chat.html',
+                controller: 'ChatCtrl'
             }
         }
     });
