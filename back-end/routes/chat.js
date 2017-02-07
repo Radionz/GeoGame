@@ -5,9 +5,9 @@ var Message = require('../models/Message.js');
 
 /* GET /messages listing. */
 router.get('/', function(req, res, next) {
-    Message.find({ userTo: "" }, function (err, user) {
+    Message.find({ userTo: "" }, function (err, message) {
         if (err) return next(err);
-        res.json(user);
+        res.json(message);
     });
 });
 

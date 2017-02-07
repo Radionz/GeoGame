@@ -6,7 +6,7 @@
                  on-swipe-left="hideTime = false"
                  on-swipe-right="hideTime = true">
      <div ng-class="chat">
-       <div ng-repeat="message in messages"
+       <div id="chat-messages" ng-repeat="message in messages"
             class="message-wrapper">
 
             <div ng-if="message.userFrom != myId">

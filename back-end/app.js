@@ -60,6 +60,34 @@ server.listen(PORT);
 server.on('error', onError);
 server.on('listening', onListening);
 
+// Chargement de socket.io
+var io = require('socket.io').listen(server);
+var Messages = require('./models/Message.js');
+
+// Quand un client se connecte, on le note dans la console
+io.sockets.on('connection', function (socket) {
+
+  var messagesService = Messages;
+
+  Messages.find({ userTo: "" }, function (err, messages) {
+      if (err) return next(err);
+      console.log("Go les messages "+ messages.length);
+      socket.emit('messages', messages);
+  });
+
+  socket.on('newclient', function(pseudo) {
+      console.log("infos nouveau client");
+  });
+
+  socket.on('message', function (message) {
+      messagesService.create(message, function (err, post) {
+          if (err) return next(err);
+          socket.emit('message', message);
+          socket.broadcast.emit('message', message);
+      });
+  });
+});
+
 //Event listener for HTTP server "error" event.
 function onError(error) {
     if (error.syscall !== 'listen') {
