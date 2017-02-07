@@ -1,27 +1,28 @@
 angular.module('Chat')
 
-.controller('ChatCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate) {
+.controller('ChatCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate, UserService, ChatService) {
 
-    $scope.hideTime = true;
-
-    var alternate,
-      isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+    var alternate, isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
     $scope.sendMessage = function() {
       alternate = !alternate;
 
-      var d = new Date();
-    d = d.toLocaleTimeString().replace(/:\d+ /, ' ');
+      var date = new Date();
+      date = date.toLocaleTimeString().replace(/:\d+ /, ' ');
 
-      $scope.messages.push({
-        userId: alternate ? '12345' : '54321',
+      ChatService.postMessage({
+        userFrom: $scope.myId,
         text: $scope.data.message,
-        time: d
+        time: 1486485109
+      }).success(function(message) {
+        $scope.messages.push(message);
+        $scope.data = {};
+        $ionicScrollDelegate.scrollBottom(true);
+      }).error( function(err, status) {
+
       });
 
-      delete $scope.data.message;
       $ionicScrollDelegate.scrollBottom(true);
-
     };
 
 
@@ -44,7 +45,13 @@ angular.module('Chat')
 
 
     $scope.data = {};
-    $scope.myId = '12345';
+    $scope.myId = $rootScope.loggedInUser._id;
     $scope.messages = [];
-
+    ChatService.getAllMessages()
+      .success(function(messages) {
+        messages.forEach(function(message){
+          $scope.messages.push(message);
+        });
+        $ionicScrollDelegate.scrollBottom(true);
+      });
 });
