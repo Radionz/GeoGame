@@ -7,14 +7,14 @@ angular.module('Chat')
       return $http({
         url: ServerEndpoint.url + "/chat",
         method: "GET"
-    });
+      });
     },
-
+    
     getAllPersonalMessages: function(idUser) {
       return $http({
         url: ServerEndpoint.url + "/chat/user/" + UserService.getUser(idUser),
         method: "GET"
-    });
+      });
     },
 
     getMessage: function(id) {

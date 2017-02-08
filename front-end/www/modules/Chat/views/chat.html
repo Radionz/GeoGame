@@ -9,7 +9,7 @@
        <div id="chat-messages" ng-repeat="message in messages"
             class="message-wrapper">
 
-            <div ng-if="message.userFrom != myId">
+            <div ng-hide="message.userFrom == myId">
                 <img class="profile-pic left" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png"/>
 
                 <div class="chat-bubble left">
@@ -17,20 +17,22 @@
                     <span>{{ message.text }}</span>
                   </div>
                   <div class="message-detail">
-                      <span class="bold">{{message.userFromName}}</span>,
-                      <span >{{message.time}}</span>
+                      <span class="bold">{{message.userFromName}}</span>
+                      <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
+                      <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
                   </div>
                 </div>
             </div>
-            <div ng-if="message.userFrom == myId">
+            <div ng-show="message.userFrom == myId">
               <img class="profile-pic right" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" />
                 <div class="chat-bubble right">
                    <div class="message" >
                      <span>{{ message.text }}</span>
                    </div>
                    <div class="message-detail">
-                       <span class="bold">{{message.userFromName}}</span>,
-                       <span >{{message.time}}</span>
+                       <span class="bold">{{message.userFromName}}</span>
+                       <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
+                       <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
                    </div>
                 </div>
            </div>
