@@ -27,10 +27,10 @@
                 <ion-item menu-close ng-show="loggedInUser" href="#/app/welcome">
                     Game list
                 </ion-item>
-                <ion-item menu-close ng-show="loggedInUser" href="#/app/gameManager">
+                <ion-item menu-close ng-show="loggedInUser && loggedInUser.role == 'Admin'" href="#/app/gameManager">
                     Game manager
                 </ion-item>
-                <ion-item menu-close ng-show="loggedInUser" href="#/app/questionManager">
+                <ion-item menu-close ng-show="loggedInUser && loggedInUser.role == 'Admin'" href="#/app/questionManager">
                     Question manager
                 </ion-item>
                 <ion-item menu-close ng-show="loggedInUser" href="#/app/chat">
