@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var ChatRoom = require('../models/ChatRoom.js');
+var Message = require('../models/Message.js');
 
 /* GET /chat listing. */
 router.get('/', function(req, res, next) {
@@ -19,11 +20,41 @@ router.post('/', function(req, res, next) {
     });
 });
 
+/* POST /chat */
+router.post('/:id/messages', function(req, res, next) {
+    Message.create(req.body, function (err, created) {
+        if (err) return next(err);
+
+        ChatRoom.findById(req.params.id, function (err, chatroom) {
+          if (err) return next(err);
+          chatObj = chatroom.toObject();
+          chatObj.messages.push(created._id);
+          delete chatObj._id
+          delete chatObj.__v
+          
+          ChatRoom.findByIdAndUpdate(req.params.id, chatObj, {new: true}, function (err, post) {
+              if (err) return next(err);
+              res.json(post);
+          });
+        });
+    });
+});
+
 /* GET /chat/id */
 router.get('/:id', function(req, res, next) {
     ChatRoom.findById(req.params.id).populate('messages').exec(function (err, post) {
         if (err) return next(err);
         res.json(post);
+    });
+});
+
+
+/* GET /chat/id */
+router.get('/:id/messages', function(req, res, next) {
+    ChatRoom.findById(req.params.id).populate('messages').exec(function (err, post) {
+        if (err) return next(err);
+        if(post === null) return [];
+        res.json(post.messages);
     });
 });
 
