@@ -63,14 +63,14 @@ angular.module('Game')
     }
   });
 
-$scope.getUser = function(userId){
-  var currentUser;
-  UserService.getUser(userId).then(function(response){
-    currentUser = response.data;
-  });
-  console.log(currentUser);
-  return currentUser.name;
-}
+  $scope.getUser = function(userId){
+    var currentUser;
+    UserService.getUser(userId).then(function(response){
+      currentUser = response.data;
+    });
+    console.log(currentUser);
+    return currentUser.name;
+  }
 
 
   function initMap() {
@@ -190,7 +190,7 @@ $scope.getUser = function(userId){
       }
     });
   }
-// Utils function
+  // Utils function
   function addYourLocationButton(map) {
     var controlDiv = document.createElement('div');
 
@@ -233,8 +233,23 @@ $scope.getUser = function(userId){
         $('#you_location_img').css('background-position', imgX+'px 0px');
       }, 500);
       var watchId;
+      var imageTeamOnMap = {
+        url: 'img/question_marker.png',
+        size: new google.maps.Size(16, 16),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(8, 8)
+      };
       var marker = new google.maps.Marker({
-        map: map
+        map: map,
+        clickable : false,
+        icon: {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          strokeColor : '#3333FF',
+          strokeWeight : 5,
+          scale: 2.5
+        },
+        shadow : null,
+        zIndex : 999
       });
 
       if(navigator.geolocation) {
@@ -245,7 +260,29 @@ $scope.getUser = function(userId){
           marker.setPosition(latlng);
           clearInterval(animationInterval);
           $('#you_location_img').css('background-position', '-144px 0px');
-        });
+        }, null, {enableHighAccuracy:true});
+
+        function enableOrientationArrow() {
+
+          if (window.DeviceOrientationEvent) {
+
+            window.addEventListener('deviceorientation', function(event) {
+              var alpha = null;
+              //Check for iOS property
+              if (event.webkitCompassHeading) {
+                alpha = event.webkitCompassHeading;
+              }
+              //non iOS
+              else {
+                alpha = event.alpha;
+              }
+              var locationIcon = marker.get('icon');
+              locationIcon.rotation = 360 - alpha;
+              marker.set('icon', locationIcon);
+            }, false);
+          }
+        }
+
       }
       else{
         clearInterval(animationInterval);
