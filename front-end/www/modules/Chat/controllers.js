@@ -1,6 +1,6 @@
 angular.module('Chat')
 
-.controller('ChatCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate, UserService, ChatService, ServerEndpoint) {
+.controller('ChatCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate, UserService, ChatRoomService, ServerEndpoint) {
 
   var socket = io.connect(ServerEndpoint.url);
   var alternate, isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
@@ -11,12 +11,12 @@ angular.module('Chat')
     var date = new Date();
     date = date.toLocaleTimeString().replace(/:\d+ /, ' ');
 
-    socket.emit('message', {
-      userFrom: $scope.myId,
-      userFromName: $rootScope.loggedInUser.name,
-      text: $scope.data.message,
-      time: new Date()
-    });
+    // socket.emit('message', {
+    //   userFrom: $scope.myId,
+    //   userFromName: $rootScope.loggedInUser.name,
+    //   text: $scope.data.message,
+    //   time: new Date()
+    // });
 
     $ionicScrollDelegate.scrollBottom(true);
   };
@@ -38,26 +38,46 @@ angular.module('Chat')
   $scope.closeKeyboard = function() {
     // cordova.plugins.Keyboard.close();
   };
-  
+
   $scope.data = {};
   $scope.messages = [];
   $ionicScrollDelegate.scrollBottom(true);
+
   if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
     $scope.myId = localStorage.getItem("userId");
+
+    // Get id for wished room
+    ChatRoomService.getChatRoomFromName("Global")
+      .then(function(chats) {
+
+        if (chats.data.length === 0) {
+          console.log("No room to join founded");
+          return;
+        }
+
+        // Create request for joining room
+        var req = {
+          chatId : chats.data[0]._id,
+          userId : $scope.myId
+        }
+        socket.emit('newclient', req);
+      })
   }
 
-
-  socket.on('message', function(message) {
-    $scope.messages.push(message);
-    $scope.data = {};
-    $scope.$apply();
-    $ionicScrollDelegate.scrollBottom(true);
+  socket.on('users', function(users) {
+    console.log(users);
   });
+
+  // socket.on('message', function(message) {
+  //   $scope.messages.push(message);
+  //   $scope.data = {};
+  //   $scope.$apply();
+  //   $ionicScrollDelegate.scrollBottom(true);
+  // });
 
   socket.on('messages', function(messages) {
     messages.forEach(function(message){
       if (((new Date) - new Date(message.time)) >  24 * 60 * 60 * 1000) {
-
         message.isOlderThanOneDay = true;
       }
       $scope.messages.push(message);

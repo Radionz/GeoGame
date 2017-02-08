@@ -65,29 +65,47 @@ server.on('listening', onListening);
 // Chargement de socket.io
 var io = require('socket.io').listen(server);
 var Messages = require('./models/Message.js');
+var ChatRoom = require('./models/ChatRoom.js');
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
 
   var messagesService = Messages;
+  var chatroomService = ChatRoom;
 
-  Messages.find({ userTo: "" }, function (err, messages) {
-      if (err) return next(err);
-      console.log("Go les messages "+ messages.length);
-      socket.emit('messages', messages);
-  });
+  socket.on('newclient', function(req) {
 
-  socket.on('newclient', function(pseudo) {
-      console.log("infos nouveau client");
-  });
+      ChatRoom.findById(req.chatId, function (err, chatroom) {
 
-  socket.on('message', function (message) {
-      messagesService.create(message, function (err, post) {
-          if (err) return next(err);
-          socket.emit('message', message);
-          socket.broadcast.emit('message', message);
+        if (err) return next(err);
+
+        // transofrm and delete id from object
+        chatObj = chatroom.toObject();
+        delete chatObj._id
+        delete chatObj.__v
+
+        // add user chat
+        chatObj.users.push(req.userId);
+
+        // update
+        ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
+                .populate('users')
+                .exec(function (err, post) {
+                    console.log(post);
+                    if (err) return next(err);
+                    socket.emit('messages', post.messages);
+                    socket.emit('users', post.users);
+                });
       });
   });
+
+  // socket.on('message', function (message) {
+  //     messagesService.create(message, function (err, post) {
+  //         if (err) return next(err);
+  //         socket.emit('message', message);
+  //         socket.broadcast.emit('message', message);
+  //     });
+  // });
 });
 
 //Event listener for HTTP server "error" event.

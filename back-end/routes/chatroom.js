@@ -6,9 +6,11 @@ var Message = require('../models/Message.js');
 
 /* GET /chat listing. */
 router.get('/', function(req, res, next) {
-    ChatRoom.find().populate('messages').exec(function (err, chat) {
-        if (err) return next(err);
-        res.json(chat);
+    ChatRoom.find()
+      .populate('messages')
+      .exec(function (err, chat) {
+          if (err) return next(err);
+          res.json(chat);
     });
 });
 
@@ -31,7 +33,7 @@ router.post('/:id/messages', function(req, res, next) {
           chatObj.messages.push(created._id);
           delete chatObj._id
           delete chatObj.__v
-          
+
           ChatRoom.findByIdAndUpdate(req.params.id, chatObj, {new: true}, function (err, post) {
               if (err) return next(err);
               res.json(post);
@@ -42,36 +44,43 @@ router.post('/:id/messages', function(req, res, next) {
 
 /* GET /chat/id */
 router.get('/:id', function(req, res, next) {
-    ChatRoom.findById(req.params.id).populate('messages').exec(function (err, post) {
-        if (err) return next(err);
-        res.json(post);
+    ChatRoom.findById(req.params.id)
+      .populate('messages')
+      .exec(function (err, post) {
+          if (err) return next(err);
+          res.json(post);
     });
 });
 
 
 /* GET /chat/id */
 router.get('/:id/messages', function(req, res, next) {
-    ChatRoom.findById(req.params.id).populate('messages').exec(function (err, post) {
-        if (err) return next(err);
-        if(post === null) return [];
-        res.json(post.messages);
+    ChatRoom.findById(req.params.id)
+      .populate('messages')
+      .exec(function (err, post) {
+          if (err) return next(err);
+          if(post === null) return [];
+          res.json(post.messages);
     });
 });
 
 /* GET /chat/name/name */
 router.get('/name/:name', function(req, res, next) {
-    ChatRoom.find({ name: req.params.id }).populate('messages').exec(function (err, chat) {
-        if (err) return next(err);
-        res.json(chat);
+    ChatRoom.find({ name: req.params.name })
+      .populate('messages')
+      .exec(function (err, chat) {
+          if (err) return next(err);
+          res.json(chat);
     });
 });
 
 /* PUT /chat/:id */
 router.put('/:id', function(req, res, next) {
     ChatRoom.findByIdAndUpdate(req.params.id, req.body, {new: true})
-    .populate('messages').exec(function (err, post) {
-        if (err) return next(err);
-        res.json(post);
+      .populate('messages')
+      .exec(function (err, post) {
+          if (err) return next(err);
+          res.json(post);
     });
 });
 
