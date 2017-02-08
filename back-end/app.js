@@ -5,7 +5,8 @@ mongoose = require('mongoose');
 
 var question = require('./routes/question'),
 game = require('./routes/game'),
-user = require('./routes/user');
+user = require('./routes/user'),
+chat = require('./routes/chat');
 
 var PORT = 8080;
 var MONGODB_URL = "mongodb://localhost";
@@ -47,6 +48,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/question', question);
 app.use('/game', game);
 app.use('/user', user);
+app.use('/chat', chat);
 
 app.set('port', PORT);
 
@@ -57,6 +59,34 @@ var server = http.createServer(app);
 server.listen(PORT);
 server.on('error', onError);
 server.on('listening', onListening);
+
+// Chargement de socket.io
+var io = require('socket.io').listen(server);
+var Messages = require('./models/Message.js');
+
+// Quand un client se connecte, on le note dans la console
+io.sockets.on('connection', function (socket) {
+
+  var messagesService = Messages;
+
+  Messages.find({ userTo: "" }, function (err, messages) {
+      if (err) return next(err);
+      console.log("Go les messages "+ messages.length);
+      socket.emit('messages', messages);
+  });
+
+  socket.on('newclient', function(pseudo) {
+      console.log("infos nouveau client");
+  });
+
+  socket.on('message', function (message) {
+      messagesService.create(message, function (err, post) {
+          if (err) return next(err);
+          socket.emit('message', message);
+          socket.broadcast.emit('message', message);
+      });
+  });
+});
 
 //Event listener for HTTP server "error" event.
 function onError(error) {

@@ -1,6 +1,7 @@
 var ScoreBoardSchema = new mongoose.Schema({
   userId: { type : String, required : true, index: {unique: true} },
   score: { type : Number, default: 0 },
+  questionsAnswered: [String]
 });
 var GameSchema = new mongoose.Schema({
     name: { type : String, required : true, index: {unique: true} },

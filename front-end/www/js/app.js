@@ -7,9 +7,19 @@
 angular.module('Welcome', []);
 angular.module('Game', []);
 angular.module('Question', []);
-angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question'])
+angular.module('Chat', []);
+angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question', 'Chat'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, UserService, $rootScope) {
+
+    if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
+      UserService.getUser(localStorage.getItem("userId")).then(function(response) {
+        var user = response.data;
+        delete user.password;
+        $rootScope.loggedInUser = user;
+      });
+    };
+
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -99,6 +109,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
             'menuContent': {
                 templateUrl: 'modules/question/views/questionManager.html',
                 controller: 'QuestionManagerCtrl'
+            }
+        }
+    }).state('app.chat', {
+        url: '/chat',
+        views: {
+            'menuContent': {
+                templateUrl: 'modules/chat/views/chat.html',
+                controller: 'ChatCtrl'
             }
         }
     });
