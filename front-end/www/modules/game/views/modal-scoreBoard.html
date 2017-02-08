@@ -8,7 +8,7 @@
       <li class="item item-icon-left" ng-repeat="player in game.scoreBoard | orderBy:'-score'">
         <i class="icon ion-trophy balanced" ng-show="$index == 0"></i>
         <h2>{{$index + 1}}</h2>
-        <p>Nom du joueur</p>
+        <p>{{$getUser(player.id)}}</p>
       </li>
 
     </div>

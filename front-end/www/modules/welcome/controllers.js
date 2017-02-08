@@ -28,7 +28,24 @@ angular.module('Welcome')
   $scope.isFull = function (game) {
     return game.scoreBoard.length >= game.playerNb;
   }
+
+  function startCountDown(game, $interval) {
+    game.timeElapsed = "00:00:00";
+    if (game.status == "STARTED") {
+      var endTime = new Date(game.started_at).getTime() + (game.duration*60*1000);
+      game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
+      var watchTimeRemaining = $interval(function(){
+        game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
+        if(game.timeElapsed <= 0){
+          $interval.cancel(watchTimeRemaining);
+          game.status = "ENDED";
+        }
+      }, 1000);
+    }
+  }
 })
+
+
 
 .controller('SignInCtrl', function($scope, $rootScope, $state, $ionicHistory, $ionicPopup, UserService) {
 
