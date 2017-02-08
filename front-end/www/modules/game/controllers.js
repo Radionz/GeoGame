@@ -8,7 +8,7 @@ angular.module('Game')
     url: 'img/question_marker.png',
     size: new google.maps.Size(16, 16),
     origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(0, 8)
+    anchor: new google.maps.Point(8, 8)
   };
 
   $scope.$on("$ionicView.enter", function(event, data){
