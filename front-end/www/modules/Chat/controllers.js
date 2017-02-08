@@ -11,9 +11,10 @@ angular.module('Chat')
 
       var date = new Date();
       date = date.toLocaleTimeString().replace(/:\d+ /, ' ');
-
+      
       socket.emit('message', {
         userFrom: $scope.myId,
+        userFromName: $rootScope.loggedInUser.name,
         text: $scope.data.message,
         time: 1486485109
       });

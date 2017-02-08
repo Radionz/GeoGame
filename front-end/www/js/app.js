@@ -17,7 +17,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
         var user = response.data;
         delete user.password;
         $rootScope.loggedInUser = user;
-        $scope.apply()
       });
     };
 
