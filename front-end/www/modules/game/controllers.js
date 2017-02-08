@@ -4,6 +4,270 @@ angular.module('Game')
 
   $('.scroll').height('100%');
 
+  var styles = [
+    {
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#ebe3cd"
+        }
+      ]
+    },
+    {
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#523735"
+        }
+      ]
+    },
+    {
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#f5f1e6"
+        }
+      ]
+    },
+    {
+      "featureType": "administrative",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#c9b2a6"
+        }
+      ]
+    },
+    {
+      "featureType": "administrative.land_parcel",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#dcd2be"
+        }
+      ]
+    },
+    {
+      "featureType": "administrative.land_parcel",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#ae9e90"
+        }
+      ]
+    },
+    {
+      "featureType": "landscape.natural",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#dfd2ae"
+        }
+      ]
+    },
+    {
+      "featureType": "poi",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#dfd2ae"
+        }
+      ]
+    },
+    {
+      "featureType": "poi",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#93817c"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.business",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.government",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.medical",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.park",
+      "elementType": "geometry.fill",
+      "stylers": [
+        {
+          "color": "#a5b076"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.park",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#447530"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.place_of_worship",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.sports_complex",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#f5f1e6"
+        }
+      ]
+    },
+    {
+      "featureType": "road.arterial",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#fdfcf8"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#f8c967"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#e9bc62"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway.controlled_access",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#e98d58"
+        }
+      ]
+    },
+    {
+      "featureType": "road.highway.controlled_access",
+      "elementType": "geometry.stroke",
+      "stylers": [
+        {
+          "color": "#db8555"
+        }
+      ]
+    },
+    {
+      "featureType": "road.local",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#806b63"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "transit.line",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#dfd2ae"
+        }
+      ]
+    },
+    {
+      "featureType": "transit.line",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#8f7d77"
+        }
+      ]
+    },
+    {
+      "featureType": "transit.line",
+      "elementType": "labels.text.stroke",
+      "stylers": [
+        {
+          "color": "#ebe3cd"
+        }
+      ]
+    },
+    {
+      "featureType": "transit.station",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#dfd2ae"
+        }
+      ]
+    },
+    {
+      "featureType": "water",
+      "elementType": "geometry.fill",
+      "stylers": [
+        {
+          "color": "#b9d3c2"
+        }
+      ]
+    },
+    {
+      "featureType": "water",
+      "elementType": "labels.text.fill",
+      "stylers": [
+        {
+          "color": "#92998d"
+        }
+      ]
+    }
+  ];
+
   var image = {
     url: 'img/question_marker.png',
     size: new google.maps.Size(16, 16),
@@ -63,33 +327,54 @@ angular.module('Game')
     }
   });
 
-$scope.getUser = function(userId){
-  var currentUser;
-  UserService.getUser(userId).then(function(response){
-    currentUser = response.data;
-  });
-  console.log(currentUser);
-  return currentUser.name;
-}
+  $scope.getUser = function(userId){
+    var currentUser;
+    UserService.getUser(userId).then(function(response){
+      currentUser = response.data;
+    });
+    console.log(currentUser);
+    return currentUser.name;
+  }
 
 
   function initMap() {
+
+    var styledMap = new google.maps.StyledMapType(styles, {name: "Styled Map"});
+
     $scope.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 43.6221174, lng: 7.0391009},
       streetViewControl: false,
+      mapTypeControlOptions: {
+        mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+      },
       zoom: 14
     });
+    //Associate the styled map with the MapTypeId and set it to display.
+    $scope.map.mapTypes.set('map_style', styledMap);
+    $scope.map.setMapTypeId('map_style');
     addYourLocationButton($scope.map);
 
     $ionicModal.fromTemplateUrl('modules/game/views/modal-scoreBoard.html', {
       scope: $scope,
       animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
+    }).then(function(modalScoreBoard) {
+      $scope.modalScoreBoard = modalScoreBoard;
+    });
+
+    $ionicModal.fromTemplateUrl('modules/game/views/modal-chat.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modalChat) {
+      $scope.modalChat = modalChat;
     });
 
     addViewScoreBoardButton($scope.map).addEventListener('click', function() {
-      $scope.modal.show();
+      $scope.modalScoreBoard.show();
+    });
+
+    addViewChatButton($scope.map).addEventListener('click', function() {
+      console.log("YEP");
+      $scope.modalChat.show();
     });
   };
 
@@ -190,7 +475,7 @@ $scope.getUser = function(userId){
       }
     });
   }
-// Utils function
+  // Utils function
   function addYourLocationButton(map) {
     var controlDiv = document.createElement('div');
 
@@ -233,8 +518,23 @@ $scope.getUser = function(userId){
         $('#you_location_img').css('background-position', imgX+'px 0px');
       }, 500);
       var watchId;
+      var imageTeamOnMap = {
+        url: 'img/question_marker.png',
+        size: new google.maps.Size(16, 16),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(8, 8)
+      };
       var marker = new google.maps.Marker({
-        map: map
+        map: map,
+        clickable : false,
+        icon: {
+          path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+          strokeColor : '#3333FF',
+          strokeWeight : 5,
+          scale: 2.5
+        },
+        shadow : null,
+        zIndex : 999
       });
 
       if(navigator.geolocation) {
@@ -245,7 +545,29 @@ $scope.getUser = function(userId){
           marker.setPosition(latlng);
           clearInterval(animationInterval);
           $('#you_location_img').css('background-position', '-144px 0px');
-        });
+        }, null, {enableHighAccuracy:true});
+
+        function enableOrientationArrow() {
+
+          if (window.DeviceOrientationEvent) {
+
+            window.addEventListener('deviceorientation', function(event) {
+              var alpha = null;
+              //Check for iOS property
+              if (event.webkitCompassHeading) {
+                alpha = event.webkitCompassHeading;
+              }
+              //non iOS
+              else {
+                alpha = event.alpha;
+              }
+              var locationIcon = marker.get('icon');
+              locationIcon.rotation = 360 - alpha;
+              marker.set('icon', locationIcon);
+            }, false);
+          }
+        }
+
       }
       else{
         clearInterval(animationInterval);
@@ -269,7 +591,7 @@ $scope.getUser = function(userId){
     controlUI.style.cursor = 'pointer';
     controlUI.style.marginBottom = '22px';
     controlUI.style.textAlign = 'center';
-    controlUI.title = 'Click to recenter the map';
+    controlUI.title = 'Click to show the scoreboard';
     controlDiv.appendChild(controlUI);
 
     // Set CSS for the control interior.
@@ -280,7 +602,40 @@ $scope.getUser = function(userId){
     controlText.style.lineHeight = '38px';
     controlText.style.paddingLeft = '5px';
     controlText.style.paddingRight = '5px';
-    controlText.innerHTML = 'Show ScoreBoard';
+    controlText.innerHTML = 'ScoreBoard';
+    controlUI.appendChild(controlText);
+
+    controlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(controlDiv);
+
+    return controlUI;
+  }
+
+  function addViewChatButton(map) {
+    var controlDiv = document.createElement('div');
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.marginLeft = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to show the chat';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '16px';
+    controlText.style.lineHeight = '38px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.innerHTML = 'Chat';
     controlUI.appendChild(controlText);
 
     controlDiv.index = 1;
