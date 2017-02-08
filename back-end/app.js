@@ -6,7 +6,8 @@ mongoose = require('mongoose');
 var question = require('./routes/question'),
 game = require('./routes/game'),
 user = require('./routes/user'),
-chat = require('./routes/chat');
+message = require('./routes/message');
+chatroom = require('./routes/chatroom');
 
 var PORT = 8080;
 var MONGODB_URL = "mongodb://localhost";
@@ -48,7 +49,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/question', question);
 app.use('/game', game);
 app.use('/user', user);
-app.use('/chat', chat);
+app.use('/message', message);
+app.use('/chatroom', chatroom);
 
 app.set('port', PORT);
 
