@@ -38,7 +38,7 @@
                             </label>
                           <div class="item range range-positive">
                             <i class="icon ion-arrow-resize"></i>
-                            <input type="range" name="question-radius" min="0" max="1000" value="500" ng-model="question.radius">
+                            <input type="range" name="question-radius" min="10" max="1000" value="150" ng-model="question.radius">
                             <span style="width: 60px;">{{question.radius}} meters</span>
                           </div>
                         </div>
@@ -71,6 +71,7 @@
                                 <p>Question: {{question.question}}</p>
                                 <p>Answer: {{question.answer}}</p>
                                 <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
+                                <p>radius: {{question.radius}} meters</p>
 
                                 <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-click="deleteQuestion(question._id, $index)">Delete</button>
                                 <button class="button icon-left ion-pinpoint button-small button-calm pull-right" style="float: right; margin-right: 16px;" ng-click="centerOnQuestion(question.loc.coordinates)">Center on map</button>

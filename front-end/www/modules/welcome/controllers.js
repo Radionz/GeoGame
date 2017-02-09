@@ -18,7 +18,7 @@ angular.module('Welcome')
   $scope.alreadyIn = function (game) {
     var alreadyIn = false;
     angular.forEach(game.scoreBoard, function(scoreBoardEntry) {
-      if (scoreBoardEntry.userId == $rootScope.loggedInUser._id) {
+      if (scoreBoardEntry.user._id == $rootScope.loggedInUser._id) {
         alreadyIn = true;
       }
     });
@@ -38,7 +38,11 @@ angular.module('Welcome')
         game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
         if(game.timeElapsed <= 0){
           $interval.cancel(watchTimeRemaining);
-          game.status = "ENDED";
+          GameService.endGame(game._id).then(function(response) {
+            var game = response.data;
+            stopCountDown(game);
+            $scope.games[game.index] = game;
+          });
         }
       }, 1000);
     }

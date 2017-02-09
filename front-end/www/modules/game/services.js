@@ -38,7 +38,7 @@ angular.module('Game')
     startGame: function(gameId) {
       var game = {};
       game.status = "STARTED";
-      game.started_at = (+ new Date());
+      game.started_at = new Date().getTime();
       return $http({
         url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
@@ -49,6 +49,17 @@ angular.module('Game')
     stopGame: function(gameId) {
       var game = {};
       game.status = "NOT_STARTED";
+      game.scoreBoard = [];
+      return $http({
+        url: ServerEndpoint.url + "/game/"+gameId,
+        method: "PUT",
+        data: game
+      });
+    },
+
+    endGame: function(gameId) {
+      var game = {};
+      game.status = "ENDED";
       return $http({
         url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
