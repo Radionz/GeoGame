@@ -1,6 +1,40 @@
 angular.module('Chat')
 
-.controller('ChatCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate, UserService, ChatRoomService, ServerEndpoint) {
+
+.controller('ChatCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate,
+    $ionicHistory, UserService, ChatRoomService, ServerEndpoint) {
+
+    ChatRoomService.getAllChatRooms()
+      .then(function(data) {
+        $scope.chatrooms = data.data;
+      });
+
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      });
+})
+
+
+.controller('ChatRoomCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate,
+   $stateParams,$ionicNavBarDelegate,$ionicHistory, UserService, ChatRoomService, ServerEndpoint) {
+
+
+
+  $scope.$on('$ionicView.enter', function() {
+     // Code you want executed every time view is opened
+     console.log('Opened!')
+     $ionicHistory.nextViewOptions({
+       disableAnimate: true,
+       disableBack: true
+     });
+
+
+
+       if ($stateParams.id == "Global") {
+         console.log('Global!')
+       }
+  })
 
   var socket = io.connect(ServerEndpoint.url);
   var alternate, isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
@@ -60,12 +94,14 @@ angular.module('Chat')
           chatId : chats.data[0]._id,
           userId : $scope.myId
         }
-        socket.emit('newclient', req);
+        //socket.emit('newclient', req);
       })
   }
 
   socket.on('users', function(users) {
-    console.log(users);
+    $scope.users = users;
+    $scope.$apply();
+    $ionicScrollDelegate.scrollBottom(false);
   });
 
   // socket.on('message', function(message) {

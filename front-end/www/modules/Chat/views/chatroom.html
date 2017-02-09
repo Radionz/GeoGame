@@ -1,0 +1,88 @@
+<ion-view name="ChatRoom" ng-init="console.log('mamam')">
+
+  <link md-href="styles/chat.css" rel="stylesheet">
+
+  <ion-content class="chat content-stable"
+                 on-swipe-left="hideTime = false"
+                 on-swipe-right="hideTime = true"
+                 scroll="false">
+
+      <ion-view class="left-view" hide-nav-bar="true" ng-init="console.log('totot')">
+        <ion-content>
+          <div class="list">
+
+            <a class="item item-avatar first-user" href="#">
+              <img ng-src="http://usstockoption.com/wp-content/uploads/2016/06/community-icon-vector-maw-icon-vector-blue-06-community-312x214.jpg"/>
+              <h2>All</h2>
+              <p>...</p>
+            </a>
+            <div class="user-separation">Room users</div>
+            <div ng-repeat="user in users">
+              <a class="item item-avatar" href="#">
+                <img ng-src="{{user.image}}"/>
+                <h2>{{user.name}}</h2>
+                <p>Dernier message</p>
+              </a>
+            </div>
+
+          </div>
+        </ion-content>
+
+        <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+        </ion-footer-bar>
+      </ion-view>
+
+
+      <ion-view class="right-view">
+        <ion-content>
+          <div class="list">
+            <div id="chat-messages" ng-repeat="message in messages"
+             class="message-wrapper">
+
+
+               <div ng-hide="message.userFrom == myId">
+                   <img class="profile-pic left" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png"/>
+
+                   <div class="chat-bubble left">
+                     <div class="message" >
+                       <span>{{ message.text }}</span>
+                     </div>
+                     <div class="message-detail">
+                         <span class="bold">{{message.userFromName}}</span>
+                         <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
+                         <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
+                     </div>
+                   </div>
+               </div>
+               <div ng-show="message.userFrom == myId">
+                 <img class="profile-pic right" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" />
+                   <div class="chat-bubble right">
+                      <div class="message" >
+                        <span>{{ message.text }}</span>
+                      </div>
+                      <div class="message-detail">
+                          <span class="bold">{{message.userFromName}}</span>
+                          <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
+                          <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
+                      </div>
+                   </div>
+              </div>
+              <div class="cf"></div>
+            </div>
+        </div>
+
+      </ion-content>
+
+      <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="Type your message" on-return="sendMessage(); closeKeyboard()" ng-model="data.message" on-focus="inputUp()" on-blur="inputDown()" />
+        </label>
+        <button class="button button-clear" ng-click="sendMessage()">
+          Send
+        </button>
+      </ion-footer-bar>
+
+    </ion-view>
+   </ion-content>
+
+</ion-view>
