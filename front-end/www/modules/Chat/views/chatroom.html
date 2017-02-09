@@ -7,7 +7,7 @@
                  on-swipe-right="hideTime = true"
                  scroll="false">
 
-      <ion-view class="left-view" hide-nav-bar="true" ng-init="console.log('totot')">
+      <ion-view class="left-view" hide-nav-bar="true">
         <ion-content>
           <div class="list">
 
@@ -34,7 +34,7 @@
 
 
       <ion-view class="right-view">
-        <ion-content>
+        <ion-content class="message-content">
           <div class="list">
             <div id="chat-messages" ng-repeat="message in messages"
              class="message-wrapper">

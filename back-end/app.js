@@ -67,6 +67,9 @@ var io = require('socket.io').listen(server);
 var Messages = require('./models/Message.js');
 var ChatRoom = require('./models/ChatRoom.js');
 
+// Connected sockets
+var allClients = [];
+
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
 
@@ -76,6 +79,8 @@ io.sockets.on('connection', function (socket) {
   socket.on('newclient', function(req) {
 
       console.log(req)
+
+      allClients[socket] = req;
 
       ChatRoom.findById(req.chatId, function (err, chatroom) {
 
@@ -96,7 +101,6 @@ io.sockets.on('connection', function (socket) {
                 .exec(function (err, post) {
                     if (err) return next(err);
 
-
                     socket.emit('messages', post.messages);
                     socket.emit('users', post.users);
                 });
@@ -110,6 +114,49 @@ io.sockets.on('connection', function (socket) {
   //         socket.broadcast.emit('message', message);
   //     });
   // });
+
+  socket.on('disconnect', function() {
+
+    console.log("disconnect")
+    console.log(allClients[socket].userId);
+    console.log(allClients[socket].chatId);
+    ChatRoom.findById(allClients[socket].chatId, function (err, chatroom) {
+
+      if (err) return next(err);
+
+      // remove user chat
+      var index;
+      console.log("sauvegardé avec socket "+ allClients[socket]);
+      console.log("ID "+ allClients[socket].userId);
+      console.log("users " + chatObj.users);
+      console.log("ICI " +chatroom.users.indexOf(allClients[socket].userId));
+      // while ((index = chatroom.users.indexOf(allClients[socket].userId)) >= 0) {
+      //   console.log(index);
+      //   chatroom.users.splice(index, 1);
+      // }
+      if ((index = chatroom.users.indexOf(allClients[socket].userId)) >= 0) {
+        chatroom.users.splice(index, 1);
+      }
+      console.log(chatroom.users.length)
+
+      // transofrm and delete id from object
+      chatObj = chatroom.toObject();
+      delete chatObj._id
+      delete chatObj.__v
+
+      // update
+      ChatRoom.findByIdAndUpdate(allClients[socket].chatId, chatObj, {new: true})
+              .populate('users', ['name', 'email', 'image', 'role'])
+              .exec(function (err, post) {
+                  if (err) return next(err);
+
+                  socket.broadcast.emit('users', post.users);
+              });
+      });
+
+      var i = allClients.indexOf(socket);
+      allClients.splice(i, 1);
+   });
 });
 
 //Event listener for HTTP server "error" event.

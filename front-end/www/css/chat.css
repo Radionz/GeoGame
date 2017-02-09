@@ -214,9 +214,17 @@ a.autolinker {
   width: 75%;
 }
 
+.message-content {
+  box-shadow: inset 0px 0px 0px 1px #ddd;
+}
+
 .user-separation {
   color: white;
   background-color: #11C1F3;
   padding: 10px;
   text-align: center;
+}
+
+.tabs-top {
+  position: relative;
 }
