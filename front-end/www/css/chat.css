@@ -203,3 +203,20 @@ a.autolinker {
 .users {
   border-right: 1px solid #333;
 }
+
+.left-view {
+  left: 0;
+  width: 25%;
+}
+
+.right-view {
+  left: 25%;
+  width: 75%;
+}
+
+.user-separation {
+  color: white;
+  background-color: #11C1F3;
+  padding: 10px;
+  text-align: center;
+}

@@ -113,10 +113,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
         }
     }).state('app.chat', {
         url: '/chat',
+        abstract: true,
         views: {
             'menuContent': {
-                templateUrl: 'modules/chat/views/chat.html',
+                templateUrl: 'modules/chat/views/chat-list.html',
                 controller: 'ChatCtrl'
+            }
+        }
+    }).state('app.chat.global', {
+        url: "/:id",
+        views: {
+            'chatroom': {
+                templateUrl: "modules/chat/views/chatroom.html",
+                controller: 'ChatRoomCtrl'
             }
         }
     });
