@@ -136,13 +136,7 @@ angular.module('Game')
     //circle.bindTo('center', marker, 'position');
 
     var contentString = '<div id="content">'+
-    '<div id="siteNotice">'+
-    '</div>'+
-    '<h1 id="firstHeading" class="firstHeading">'+question.name+' ( '+question.nb_point+'pts )</h1>'+
-    '<div id="bodyContent">'+
-    '<p> Question: '+question.question+'</p>'+
-    '<p> Answer : '+question.answer+'</p>'+
-    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">'+question.name+' ('+question.nb_point+' pts)</h1>'+
     '</div>';
 
     var infowindow = new google.maps.InfoWindow({
