@@ -4,269 +4,7 @@ angular.module('Game')
 
   $('.scroll').height('100%');
 
-  var styles = [
-    {
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#ebe3cd"
-        }
-      ]
-    },
-    {
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#523735"
-        }
-      ]
-    },
-    {
-      "elementType": "labels.text.stroke",
-      "stylers": [
-        {
-          "color": "#f5f1e6"
-        }
-      ]
-    },
-    {
-      "featureType": "administrative",
-      "elementType": "geometry.stroke",
-      "stylers": [
-        {
-          "color": "#c9b2a6"
-        }
-      ]
-    },
-    {
-      "featureType": "administrative.land_parcel",
-      "elementType": "geometry.stroke",
-      "stylers": [
-        {
-          "color": "#dcd2be"
-        }
-      ]
-    },
-    {
-      "featureType": "administrative.land_parcel",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#ae9e90"
-        }
-      ]
-    },
-    {
-      "featureType": "landscape.natural",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#dfd2ae"
-        }
-      ]
-    },
-    {
-      "featureType": "poi",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#dfd2ae"
-        }
-      ]
-    },
-    {
-      "featureType": "poi",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#93817c"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.business",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.government",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.medical",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.park",
-      "elementType": "geometry.fill",
-      "stylers": [
-        {
-          "color": "#a5b076"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.park",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#447530"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.place_of_worship",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "poi.sports_complex",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "road",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#f5f1e6"
-        }
-      ]
-    },
-    {
-      "featureType": "road.arterial",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#fdfcf8"
-        }
-      ]
-    },
-    {
-      "featureType": "road.highway",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#f8c967"
-        }
-      ]
-    },
-    {
-      "featureType": "road.highway",
-      "elementType": "geometry.stroke",
-      "stylers": [
-        {
-          "color": "#e9bc62"
-        }
-      ]
-    },
-    {
-      "featureType": "road.highway.controlled_access",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#e98d58"
-        }
-      ]
-    },
-    {
-      "featureType": "road.highway.controlled_access",
-      "elementType": "geometry.stroke",
-      "stylers": [
-        {
-          "color": "#db8555"
-        }
-      ]
-    },
-    {
-      "featureType": "road.local",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#806b63"
-        }
-      ]
-    },
-    {
-      "featureType": "transit",
-      "stylers": [
-        {
-          "visibility": "off"
-        }
-      ]
-    },
-    {
-      "featureType": "transit.line",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#dfd2ae"
-        }
-      ]
-    },
-    {
-      "featureType": "transit.line",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#8f7d77"
-        }
-      ]
-    },
-    {
-      "featureType": "transit.line",
-      "elementType": "labels.text.stroke",
-      "stylers": [
-        {
-          "color": "#ebe3cd"
-        }
-      ]
-    },
-    {
-      "featureType": "transit.station",
-      "elementType": "geometry",
-      "stylers": [
-        {
-          "color": "#dfd2ae"
-        }
-      ]
-    },
-    {
-      "featureType": "water",
-      "elementType": "geometry.fill",
-      "stylers": [
-        {
-          "color": "#b9d3c2"
-        }
-      ]
-    },
-    {
-      "featureType": "water",
-      "elementType": "labels.text.fill",
-      "stylers": [
-        {
-          "color": "#92998d"
-        }
-      ]
-    }
-  ];
+ var styles = [ { "elementType": "geometry", "stylers": [ { "color": "#ebe3cd" } ] }, { "elementType": "labels.text.fill", "stylers": [ { "color": "#523735" } ] }, { "elementType": "labels.text.stroke", "stylers": [ { "color": "#f5f1e6" } ] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [ { "color": "#c9b2a6" } ] }, { "featureType": "administrative.land_parcel", "elementType": "geometry.stroke", "stylers": [ { "color": "#dcd2be" } ] }, { "featureType": "administrative.land_parcel", "elementType": "labels.text.fill", "stylers": [ { "color": "#ae9e90" } ] }, { "featureType": "landscape.natural", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "poi", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "poi", "elementType": "labels.text.fill", "stylers": [ { "color": "#93817c" } ] }, { "featureType": "poi.business", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.government", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.medical", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.park", "elementType": "geometry.fill", "stylers": [ { "color": "#a5b076" } ] }, { "featureType": "poi.park", "elementType": "labels.text.fill", "stylers": [ { "color": "#447530" } ] }, { "featureType": "poi.place_of_worship", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.sports_complex", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road", "elementType": "geometry", "stylers": [ { "color": "#f5f1e6" } ] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [ { "color": "#fdfcf8" } ] }, { "featureType": "road.highway", "elementType": "geometry", "stylers": [ { "color": "#f8c967" } ] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [ { "color": "#e9bc62" } ] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry", "stylers": [ { "color": "#e98d58" } ] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry.stroke", "stylers": [ { "color": "#db8555" } ] }, { "featureType": "road.local", "elementType": "labels.text.fill", "stylers": [ { "color": "#806b63" } ] }, { "featureType": "transit", "stylers": [ { "visibility": "off" } ] }, { "featureType": "transit.line", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "transit.line", "elementType": "labels.text.fill", "stylers": [ { "color": "#8f7d77" } ] }, { "featureType": "transit.line", "elementType": "labels.text.stroke", "stylers": [ { "color": "#ebe3cd" } ] }, { "featureType": "transit.station", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "water", "elementType": "geometry.fill", "stylers": [ { "color": "#b9d3c2" } ] }, { "featureType": "water", "elementType": "labels.text.fill", "stylers": [ { "color": "#92998d" } ] } ];
 
   var image = {
     url: 'img/question_marker.png',
@@ -291,7 +29,7 @@ angular.module('Game')
 
         var alreadyIn = false;
         angular.forEach(game.scoreBoard, function(scoreBoardEntry) {
-          if (scoreBoardEntry.userId == $rootScope.loggedInUser._id) {
+          if (scoreBoardEntry.user._id == $rootScope.loggedInUser._id) {
             alreadyIn = true;
             return;
           }
@@ -299,7 +37,7 @@ angular.module('Game')
 
         if (!alreadyIn) {
           var scoreBoardEntry = {};
-          scoreBoardEntry.userId = $rootScope.loggedInUser._id;
+          scoreBoardEntry.user._id = $rootScope.loggedInUser._id;
           scoreBoardEntry.score = 0;
           game.scoreBoard.push(scoreBoardEntry);
 
@@ -457,7 +195,7 @@ angular.module('Game')
 
   function isQuestionAnswered(questionId, userId){
     angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
-      if(scoreBoardEntry.userId == userId){
+      if(scoreBoardEntry.user._id == userId){
         angular.forEach(scoreBoardEntry.questionsAnswered, function(question){
           if(question == questionId) return true;
         });
@@ -468,7 +206,7 @@ angular.module('Game')
 
   function addPointsToScore(userId, question){
     angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
-      if(scoreBoardEntry.userId == userId){
+      if(scoreBoardEntry.user._id == userId){
         scoreBoardEntry.score = scoreBoardEntry.score+question.nb_points;
         scoreBoardEntry.questionsAnswered.push(question.id);
         return;
@@ -653,7 +391,11 @@ angular.module('Game')
         game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
         if(game.timeElapsed <= 0){
           $interval.cancel(watchTimeRemaining);
-          game.status = "ENDED";
+          GameService.endGame(game._id).then(function(response) {
+            var game = response.data;
+            stopCountDown(game);
+            $scope.games[game.index] = game;
+          });
         }
       }, 1000);
     }
@@ -662,8 +404,6 @@ angular.module('Game')
   function stopCountDown(game) {
     game.timeElapsed = "00:00:00";
   }
-
-
 })
 
 .controller('GameManagerCtrl', function($scope, $interval, GameService, QuestionService) {
@@ -772,9 +512,17 @@ angular.module('Game')
         game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
         if(game.timeElapsed <= 0){
           $interval.cancel(watchTimeRemaining);
-          game.status = "ENDED";
+          GameService.endGame(game._id).then(function(response) {
+            var game = response.data;
+            stopCountDown(game);
+            $scope.games[game.index] = game;
+          });
         }
       }, 1000);
     }
+  }
+
+  function stopCountDown(game) {
+    game.timeElapsed = "00:00:00";
   }
 });
