@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-//var ScoreBoard = require('../models/ScoreBoard.js');
 var Game = require('../models/Game.js');
 
 /* GET /games listing. */
