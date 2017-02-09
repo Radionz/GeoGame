@@ -11,7 +11,7 @@ var SimpleQuestionSchema = new mongoose.Schema({
         type: { type: String, default: 'Point' },
         coordinates: [Number]
     },
-    updated_at: { type: Date, default: Date.now }
+    updated_at: { type: Date, default: function(){return new Date().getTime()} }
 });
 
 SimpleQuestionSchema.index({loc:'2dsphere'});
