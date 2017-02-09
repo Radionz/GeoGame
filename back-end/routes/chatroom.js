@@ -8,6 +8,7 @@ var Message = require('../models/Message.js');
 router.get('/', function(req, res, next) {
     ChatRoom.find()
       .populate('messages')
+      .populate('users', ['name', 'email', 'image', 'role'])
       .exec(function (err, chat) {
           if (err) return next(err);
           res.json(chat);
@@ -46,6 +47,7 @@ router.post('/:id/messages', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
     ChatRoom.findById(req.params.id)
       .populate('messages')
+      .populate('users', ['name', 'email', 'image', 'role'])
       .exec(function (err, post) {
           if (err) return next(err);
           res.json(post);
@@ -68,6 +70,7 @@ router.get('/:id/messages', function(req, res, next) {
 router.get('/name/:name', function(req, res, next) {
     ChatRoom.find({ name: req.params.name })
       .populate('messages')
+      .populate('users', ['name', 'email', 'image', 'role'])
       .exec(function (err, chat) {
           if (err) return next(err);
           res.json(chat);
@@ -78,6 +81,7 @@ router.get('/name/:name', function(req, res, next) {
 router.put('/:id', function(req, res, next) {
     ChatRoom.findByIdAndUpdate(req.params.id, req.body, {new: true})
       .populate('messages')
+      .populate('users', ['name', 'email', 'image', 'role'])
       .exec(function (err, post) {
           if (err) return next(err);
           res.json(post);

@@ -75,6 +75,8 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('newclient', function(req) {
 
+      console.log(req)
+
       ChatRoom.findById(req.chatId, function (err, chatroom) {
 
         if (err) return next(err);
@@ -89,10 +91,12 @@ io.sockets.on('connection', function (socket) {
 
         // update
         ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
-                .populate('users')
+                .populate('messages')
+                .populate('users', ['name', 'email', 'image', 'role'])
                 .exec(function (err, post) {
-                    console.log(post);
                     if (err) return next(err);
+
+
                     socket.emit('messages', post.messages);
                     socket.emit('users', post.users);
                 });

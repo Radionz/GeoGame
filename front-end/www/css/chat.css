@@ -193,3 +193,12 @@ a.autolinker {
 .loader .ion-loading-c {
   font-size: 64px;
 }
+
+.chat {
+  padding-left: 0px;
+  padding-top: 0px;
+}
+
+.users {
+  border-right: 1px solid #333;
+}
