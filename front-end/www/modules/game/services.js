@@ -49,6 +49,7 @@ angular.module('Game')
     stopGame: function(gameId) {
       var game = {};
       game.status = "NOT_STARTED";
+      game.scoreBoard = [];
       return $http({
         url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",

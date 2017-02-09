@@ -37,6 +37,7 @@ angular.module('Game')
 
         if (!alreadyIn) {
           var scoreBoardEntry = {};
+          scoreBoardEntry.user = {};
           scoreBoardEntry.user._id = $rootScope.loggedInUser._id;
           scoreBoardEntry.score = 0;
           game.scoreBoard.push(scoreBoardEntry);
