@@ -1,12 +1,12 @@
 var ScoreBoardSchema = new mongoose.Schema({
-  userId: { type : String, required : true, index: {unique: true} },
+  user: { type : mongoose.Schema.Types.ObjectId, ref: 'User', required : true},
   score: { type : Number, default: 0 },
   questionsAnswered: [String]
 });
 var GameSchema = new mongoose.Schema({
     name: { type : String, required : true, index: {unique: true} },
     questions: [String],
-    scoreBoard: [ScoreBoardSchema],
+    scoreBoard: [{ type : mongoose.Schema.Types.ObjectId, ref: 'ScoreBoard'}],
     duration: { type : Number, default: 90 },
     playerNb: { type : Number, default: 5 },
     status: { type : String, default : 'NOT_STARTED' },
@@ -15,3 +15,4 @@ var GameSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Game', GameSchema);
+module.exports = mongoose.model('ScoreBoard', ScoreBoardSchema);

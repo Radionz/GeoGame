@@ -5,7 +5,9 @@ var Game = require('../models/Game.js');
 
 /* GET /game listing. */
 router.get('/', function(req, res, next) {
-    Game.find(function (err, game) {
+    Game.find()
+      .populate('scoreBoard.user')
+      .exec(function (err, game) {
         if (err) return next(err);
         res.json(game);
     });
@@ -21,7 +23,9 @@ router.post('/', function(req, res, next) {
 
 /* GET /game/id */
 router.get('/:id', function(req, res, next) {
-    Game.findById(req.params.id, function (err, post) {
+    Game.findById(req.params.id)
+      .populate('scoreBoard.user')
+      .exec(function (err, post) {
         if (err) return next(err);
         res.json(post);
     });
@@ -29,7 +33,9 @@ router.get('/:id', function(req, res, next) {
 
 /* PUT /game/:id */
 router.put('/:id', function(req, res, next) {
-    Game.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, post) {
+    Game.findByIdAndUpdate(req.params.id, req.body, {new: true})
+      .populate('scoreBoard.user')
+      .exec(function (err, post) {
         if (err) return next(err);
         res.json(post);
     });
