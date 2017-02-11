@@ -10,7 +10,9 @@ angular.module('Question', []);
 angular.module('Chat', []);
 angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Question', 'Chat'])
 
-.run(function($ionicPlatform, UserService, $rootScope) {
+.run(function($ionicPlatform, UserService, $rootScope, ServerEndpoint) {
+
+    $rootScope.socket = io.connect(ServerEndpoint.url);
 
     if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
       UserService.getUser(localStorage.getItem("userId")).then(function(response) {
@@ -120,7 +122,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
                 controller: 'ChatCtrl'
             }
         }
-    }).state('app.chat.global', {
+    }).state('app.chat.chatroom', {
         url: "/:id",
         views: {
             'chatroom': {

@@ -68,7 +68,7 @@ var Messages = require('./models/Message.js');
 var ChatRoom = require('./models/ChatRoom.js');
 
 // Connected sockets
-var allClients = [];
+var allClients = {};
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
@@ -76,11 +76,14 @@ io.sockets.on('connection', function (socket) {
   var messagesService = Messages;
   var chatroomService = ChatRoom;
 
+  // init socket
+  allClients[socket.id] = {};
+
   socket.on('newclient', function(req) {
 
       console.log(req)
 
-      allClients[socket] = req;
+      allClients[socket.id] = req;
 
       ChatRoom.findById(req.chatId, function (err, chatroom) {
 
@@ -100,12 +103,39 @@ io.sockets.on('connection', function (socket) {
                 .populate('users', ['name', 'email', 'image', 'role'])
                 .exec(function (err, post) {
                     if (err) return next(err);
+                    if (post == null) return null;
 
                     socket.emit('messages', post.messages);
-                    socket.emit('users', post.users);
+                    for (var socketId in allClients) {
+                      if (allClients[socketId].chatId == req.chatId) {
+                        io.sockets.connected[socketId].emit('users', post.users);
+                      }
+                    }
                 });
       });
   });
+
+
+  socket.on('leaveChatroom', function(req) {
+    if (allClients[socket.id] == null || req.userId == null || req.chatId == null) {
+      console.log("User or chat undefined: " + allClients[socket.id].userId + " , " + allClients[socket.id].chatId);
+    }
+
+    console.log("User "+ req.userId+ " disconnect from chat " + req.chatId);
+    removeUserFromRoom(req.userId, req.chatId, socket);
+  });
+
+  socket.on('disconnect', function() {
+    if (allClients[socket.id].userId == null || allClients[socket.id].chatId == null) {
+      console.log("User or chat undefined: " + allClients[socket.id].userId + " , " + allClients[socket.id].chatId);
+    }
+
+    console.log("User "+ allClients[socket.id].userId+ " disconnect from chat " + allClients[socket.id].chatId);
+    removeUserFromRoom(allClients[socket.id].userId, allClients[socket.id].chatId, socket);
+
+    delete allClients[socket.id];
+  });
+
 
   // socket.on('message', function (message) {
   //     messagesService.create(message, function (err, post) {
@@ -114,50 +144,39 @@ io.sockets.on('connection', function (socket) {
   //         socket.broadcast.emit('message', message);
   //     });
   // });
-
-  socket.on('disconnect', function() {
-
-    console.log("disconnect")
-    console.log(allClients[socket].userId);
-    console.log(allClients[socket].chatId);
-    ChatRoom.findById(allClients[socket].chatId, function (err, chatroom) {
-
-      if (err) return next(err);
-
-      // remove user chat
-      var index;
-      console.log("sauvegardé avec socket "+ allClients[socket]);
-      console.log("ID "+ allClients[socket].userId);
-      console.log("users " + chatObj.users);
-      console.log("ICI " +chatroom.users.indexOf(allClients[socket].userId));
-      // while ((index = chatroom.users.indexOf(allClients[socket].userId)) >= 0) {
-      //   console.log(index);
-      //   chatroom.users.splice(index, 1);
-      // }
-      if ((index = chatroom.users.indexOf(allClients[socket].userId)) >= 0) {
-        chatroom.users.splice(index, 1);
-      }
-      console.log(chatroom.users.length)
-
-      // transofrm and delete id from object
-      chatObj = chatroom.toObject();
-      delete chatObj._id
-      delete chatObj.__v
-
-      // update
-      ChatRoom.findByIdAndUpdate(allClients[socket].chatId, chatObj, {new: true})
-              .populate('users', ['name', 'email', 'image', 'role'])
-              .exec(function (err, post) {
-                  if (err) return next(err);
-
-                  socket.broadcast.emit('users', post.users);
-              });
-      });
-
-      var i = allClients.indexOf(socket);
-      allClients.splice(i, 1);
-   });
 });
+
+function removeUserFromRoom(userId, chatId, socket) {
+
+  ChatRoom.findById(chatId, function (err, chatroom) {
+    if (err) return next(err);
+    if (chatroom == null) return;
+
+    // remove user chat
+    var index;
+    if ((index = chatroom.users.indexOf(userId)) >= 0) {
+      chatroom.users.splice(index, 1);
+    }
+
+    // transofrm and delete id from object
+    chatObj = chatroom.toObject();
+    delete chatObj._id
+    delete chatObj.__v
+
+    // update
+    ChatRoom.findByIdAndUpdate(chatId, chatObj, {new: true})
+            .populate('users', ['name', 'email', 'image', 'role'])
+            .exec(function (err, post) {
+                if (err) return next(err);
+
+                for (var socketId in allClients) {
+                  if (allClients[socketId].chatId == chatId) {
+                    io.sockets.connected[socketId].emit('users', post.users);
+                  }
+                }
+            });
+    });
+}
 
 //Event listener for HTTP server "error" event.
 function onError(error) {

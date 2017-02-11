@@ -1,4 +1,4 @@
-<ion-view name="ChatRoom" ng-init="console.log('mamam')">
+<ion-view name="ChatRoom">
 
   <link md-href="styles/chat.css" rel="stylesheet">
 
@@ -9,23 +9,24 @@
 
       <ion-view class="left-view" hide-nav-bar="true">
         <ion-content>
-          <div class="list">
+          <list>
 
-            <a class="item item-avatar first-user" href="#">
+            <a class="item item-avatar first-user active" >
               <img ng-src="http://usstockoption.com/wp-content/uploads/2016/06/community-icon-vector-maw-icon-vector-blue-06-community-312x214.jpg"/>
               <h2>All</h2>
               <p>...</p>
             </a>
             <div class="user-separation">Room users</div>
             <div ng-repeat="user in users">
-              <a class="item item-avatar" href="#">
-                <img ng-src="{{user.image}}"/>
+              <a class="item item-avatar" >
+                <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}"/>
+                <img ng-if="user.image != ''" ng-src="{{user.image}}"/>
                 <h2>{{user.name}}</h2>
                 <p>Dernier message</p>
               </a>
             </div>
 
-          </div>
+          </list>
         </ion-content>
 
         <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
