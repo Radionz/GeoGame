@@ -1,6 +1,6 @@
 angular.module('Question')
 
-.controller('QuestionManagerCtrl', function($scope, QuestionService) {
+.controller('QuestionManagerCtrl', function($scope, QuestionService, ServerEndpoint) {
 
   var image = {
     url: 'img/question_marker.png',
@@ -16,6 +16,7 @@ angular.module('Question')
       var questions = response.data;
       $scope.questions = questions;
       angular.forEach(questions, function(question) {
+        question.clue_image_url = ServerEndpoint.url + "/question/" + question._id + "/clue_image";
         addQuestionToMap(question);
       });
     });

@@ -36,7 +36,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
 })
 
 .constant('ServerEndpoint', {
-    url: 'http://localhost:8080'
+    url: 'http://192.168.1.26:8080'
     //url: 'http://home.dobl.fr:8080'
 })
 

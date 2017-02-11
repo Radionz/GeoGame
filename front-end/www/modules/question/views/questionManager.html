@@ -25,10 +25,10 @@
                 <span class="input-label">Points</span>
                 <input type="number" placeholder="Points" ng-model="question.nb_point">
               </label>
-              <label class="fileUpload item-input  button button-block button-positive">
+              <label class="fileUpload item-input  button button-block button-positive" style="margin : 10px 0px;">
                 <i class="icon ion-image"></i>
                 <span>Send a clue image</span>
-                <input class="upload button button-block button-positive" style="margin-left : 0px;" type="file" name="pic" accept="image/*" id="questionImage">
+                <input class="upload button button-block button-positive" style="margin-left : 0px;" type="file" accept="image/*" id="questionImage">
               </label>
 
               <!-- <input class="fileUpload button button-block button-positive" style="margin-left : 0px;" type="file" name="pic" accept="image/*" ng-model="question.nb_point">
@@ -77,11 +77,19 @@
           <div class="item item-text-wrap">
             <ul class="list">
               <li class="item"  ng-repeat="question in questions">
-                <h2>{{question.name}} ({{question.nb_point}} pts)</h2>
-                <p>Question: {{question.question}}</p>
-                <p>Answer: {{question.answer}}</p>
-                <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
-                <p>radius: {{question.radius}} meters</p>
+                <div class="row">
+                  <div class="col-80">
+                    <h2>{{question.name}} ({{question.nb_point}} pts)</h2>
+                    <p>Question: {{question.question}}</p>
+                    <p>Answer: {{question.answer}}</p>
+                    <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
+                    <p>radius: {{question.radius}} meters</p>
+                  </div>
+                  <div class="col-20">
+                    <img src="{{question.clue_image_url}}" alt="Clue image" style="width : 100%;">
+                  </div>
+                </div>
+
 
                 <button class="button icon-left ion-trash-a button-small button-assertive pull-right" style="float: right; margin-right: 16px;" ng-click="deleteQuestion(question._id, $index)">Delete</button>
                 <button class="button icon-left ion-pinpoint button-small button-calm pull-right" style="float: right; margin-right: 16px;" ng-click="centerOnQuestion(question.loc.coordinates)">Center on map</button>

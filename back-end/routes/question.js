@@ -24,6 +24,8 @@ router.post('/', function(req, res, next) {
   });
 });
 
+
+
 /* POST /question/:id/file */
 router.post('/:id/file', function(req, res, next) {
 
@@ -47,6 +49,14 @@ router.get('/:id', function(req, res, next) {
   SimpleQuestion.findById(req.params.id, function (err, post) {
     if (err) return next(err);
     res.json(post);
+  });
+});
+
+/* GET /question/id */
+router.get('/:id/clue_image', function(req, res, next) {
+  SimpleQuestion.findById(req.params.id, function (err, post) {
+    if (err) return next(err);
+    res.sendFile(post.clue_image);
   });
 });
 
