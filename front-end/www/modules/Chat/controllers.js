@@ -21,14 +21,45 @@ angular.module('Chat')
 
   var chatId;
 
+  var updateUsers = function(users) {
+    var unique = users.filter(function(elem, index, self) {
+        return index == self.indexOf(elem);
+    });
+    $scope.users = unique;
+    $scope.$apply();
+    $('.profilePicture').initial();
+    $ionicScrollDelegate.scrollBottom(false);
+  };
 
+  var updateMessage = function(message) {
+    $scope.messages.push(message);
+    $scope.data = {};
+    $scope.$apply();
+    $('.profilePicture').initial();
+    $ionicScrollDelegate.scrollBottom(true);
+  };
+
+  var updateMessages = function(messages) {
+    $scope.messages = [];
+    messages.forEach(function(message){
+      if (((new Date) - new Date(message.time)) >  24 * 60 * 60 * 1000) {
+        message.isOlderThanOneDay = true;
+      }
+      $scope.messages.push(message);
+    });
+
+    console.log($scope.messages)
+    $ionicScrollDelegate.scrollBottom(false);
+  };
 
   $scope.$on('$ionicView.enter', function() {
 
+    $rootScope.socket.on('messages', updateMessages);
+    $rootScope.socket.on('message', updateMessage);
+    $rootScope.socket.on('users', updateUsers);
 
     // Code you want executed every time view is opened
     console.log('Opened! ' + $stateParams.id)
-
 
     $ionicHistory.nextViewOptions({
      disableAnimate: true,
@@ -99,36 +130,6 @@ angular.module('Chat')
 
     });
 
-    $rootScope.socket.on('users', function(users) {
-      var unique = users.filter(function(elem, index, self) {
-          return index == self.indexOf(elem);
-      });
-      $scope.users = unique;
-      $scope.$apply();
-      $('.profilePicture').initial();
-      $ionicScrollDelegate.scrollBottom(false);
-    });
-
-    $rootScope.socket.on('message', function(message) {
-      $scope.messages.push(message);
-      $scope.data = {};
-      $scope.$apply();
-      $('.profilePicture').initial();
-      $ionicScrollDelegate.scrollBottom(true);
-    });
-
-    $rootScope.socket.on('messages', function(messages) {
-      $scope.messages = [];
-      messages.forEach(function(message){
-        if (((new Date) - new Date(message.time)) >  24 * 60 * 60 * 1000) {
-          message.isOlderThanOneDay = true;
-        }
-        $scope.messages.push(message);
-      });
-
-      console.log($scope.messages)
-      $ionicScrollDelegate.scrollBottom(false);
-    });
 
   });
 
@@ -138,7 +139,9 @@ angular.module('Chat')
       chatId : chatId,
       userId : $scope.myId
     }
-
+    $rootScope.socket.removeListener('users', updateUsers);
+    $rootScope.socket.removeListener('message', updateMessage);
+    $rootScope.socket.removeListener('messages', updateMessages);
     $rootScope.socket.emit('leaveChatroom', req);
   });
 
