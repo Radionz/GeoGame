@@ -12,7 +12,7 @@
           <list id="userList">
 
             <a class="item item-avatar first-user active" >
-              <img ng-src="http://usstockoption.com/wp-content/uploads/2016/06/community-icon-vector-maw-icon-vector-blue-06-community-312x214.jpg"/>
+              <img data-name="All" class="profilePicture"/>
               <h2>All</h2>
               <p>...</p>
             </a>
@@ -41,30 +41,30 @@
              class="message-wrapper">
 
 
-               <div ng-hide="message.userFrom == myId">
-                   <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}" class="profile-pic left"/>
-                   <img ng-if="user.image != ''" ng-src="{{user.image}}" class="profile-pic left"/>
+               <div ng-hide="message.userFrom._id == myId">
+                   <img ng-if="message.userFrom.image == ''" data-name="{{message.userFrom.name}}" ng-class="{profilePicture: message.userFrom.image == ''}" class="profile-pic left"/>
+                   <img ng-if="message.userFrom.image != ''" ng-src="{{message.userFrom.image}}" class="profile-pic left"/>
 
                    <div class="chat-bubble left">
                      <div class="message" >
                        <span>{{ message.text }}</span>
                      </div>
                      <div class="message-detail">
-                         <span class="bold">{{message.userFromName}}</span>
+                         <span class="bold">{{message.userFrom.name}}</span>
                          <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
                          <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
                      </div>
                    </div>
                </div>
-               <div ng-show="message.userFrom == myId">
-                 <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}" class="profile-pic right"/>
-                 <img ng-if="user.image != ''" ng-src="{{user.image}}" class="profile-pic right"/>
+               <div ng-show="message.userFrom._id == myId">
+                 <img ng-if="message.userFrom.image == ''" data-name="{{message.userFrom.name}}" ng-class="{profilePicture: message.userFrom.image == ''}" class="profile-pic right"/>
+                 <img ng-if="message.userFrom.image != ''" ng-src="{{message.userFrom.image}}" class="profile-pic right"/>
                    <div class="chat-bubble right">
                       <div class="message" >
                         <span>{{ message.text }}</span>
                       </div>
                       <div class="message-detail">
-                          <span class="bold">{{message.userFromName}}</span>
+                          <span class="bold">{{message.userFrom.name}}</span>
                           <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
                           <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
                       </div>

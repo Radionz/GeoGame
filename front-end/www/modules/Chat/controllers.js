@@ -110,6 +110,7 @@ angular.module('Chat')
     });
 
     $rootScope.socket.on('message', function(message) {
+      console.log(message)
       $scope.messages.push(message);
       $scope.data = {};
       $scope.$apply();

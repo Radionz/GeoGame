@@ -99,7 +99,10 @@ io.sockets.on('connection', function (socket) {
 
         // update
         ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
-                .populate('messages')
+                .populate({
+                  path: 'messages',
+                  populate: { path: 'userFrom' }
+                })
                 .populate('users', ['name', 'email', 'image', 'role'])
                 .exec(function (err, post) {
                     if (err) return next(err);
@@ -154,7 +157,10 @@ io.sockets.on('connection', function (socket) {
           delete chatObj.__v
 
           ChatRoom.findByIdAndUpdate(allClients[socket.id].chatId, chatObj, {new: true})
-              .populate('messages')
+              .populate({
+                path: 'messages',
+                populate: { path: 'userFrom' }
+              })
               .exec( function (err, post) {
                 if (err) return next(err);
                 console.log("sent");
