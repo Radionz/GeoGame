@@ -137,13 +137,40 @@ io.sockets.on('connection', function (socket) {
   });
 
 
-  // socket.on('message', function (message) {
-  //     messagesService.create(message, function (err, post) {
-  //         if (err) return next(err);
-  //         socket.emit('message', message);
-  //         socket.broadcast.emit('message', message);
-  //     });
-  // });
+  socket.on('message', function (message) {
+
+    Messages.create(message, function (err, created) {
+        if (err) return next(err);
+
+        console.log("crerated message with id " + created._id)
+        ChatRoom.findById(allClients[socket.id].chatId, function (err, chatroom) {
+          if (err) return next(err);
+
+          chatObj = chatroom.toObject();
+          console.log("Try to add " + created._id)
+          chatObj.messages.push(created._id);
+
+          delete chatObj._id
+          delete chatObj.__v
+
+          ChatRoom.findByIdAndUpdate(allClients[socket.id].chatId, chatObj, {new: true})
+              .populate('messages')
+              .exec( function (err, post) {
+                if (err) return next(err);
+                console.log("sent");
+                socket.emit('message', message);
+
+                for (var socketId in allClients) {
+                  if (allClients[socketId].chatId == allClients[socket.id].chatId && allClients[socketId].userId != message.userFrom) {
+                    io.sockets.connected[socketId].emit('message', message);
+                  }
+                }
+          });
+        });
+    });
+
+
+  });
 });
 
 function removeUserFromRoom(userId, chatId, socket) {

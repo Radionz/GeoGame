@@ -46,12 +46,12 @@ angular.module('Chat')
       var date = new Date();
       date = date.toLocaleTimeString().replace(/:\d+ /, ' ');
 
-      // socket.emit('message', {
-      //   userFrom: $scope.myId,
-      //   userFromName: $rootScope.loggedInUser.name,
-      //   text: $scope.data.message,
-      //   time: new Date()
-      // });
+      $scope.socket.emit('message', {
+        userFrom: $scope.myId,
+        userFromName: $rootScope.loggedInUser.name,
+        text: $scope.data.message,
+        time: new Date()
+      });
 
       $ionicScrollDelegate.scrollBottom(true);
     };
@@ -109,12 +109,12 @@ angular.module('Chat')
       $ionicScrollDelegate.scrollBottom(false);
     });
 
-    // $rootScope.socket.on('message', function(message) {
-    //   $scope.messages.push(message);
-    //   $scope.data = {};
-    //   $scope.$apply();
-    //   $ionicScrollDelegate.scrollBottom(true);
-    // });
+    $rootScope.socket.on('message', function(message) {
+      $scope.messages.push(message);
+      $scope.data = {};
+      $scope.$apply();
+      $ionicScrollDelegate.scrollBottom(true);
+    });
 
     $rootScope.socket.on('messages', function(messages) {
       messages.forEach(function(message){
