@@ -75,7 +75,7 @@ angular.module('Chat')
     };
 
     $scope.data = {};
-    $scope.messages = [];
+    console.log($scope.messages);
     $ionicScrollDelegate.scrollBottom(true);
 
 
@@ -117,13 +117,15 @@ angular.module('Chat')
     });
 
     $rootScope.socket.on('messages', function(messages) {
+      $scope.messages = [];
       messages.forEach(function(message){
         if (((new Date) - new Date(message.time)) >  24 * 60 * 60 * 1000) {
           message.isOlderThanOneDay = true;
         }
         $scope.messages.push(message);
       });
-      $scope.$apply();
+
+      console.log($scope.messages)
       $ionicScrollDelegate.scrollBottom(false);
     });
 

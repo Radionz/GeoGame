@@ -9,7 +9,7 @@
 
       <ion-view class="left-view" hide-nav-bar="true">
         <ion-content>
-          <list>
+          <list id="userList">
 
             <a class="item item-avatar first-user active" >
               <img ng-src="http://usstockoption.com/wp-content/uploads/2016/06/community-icon-vector-maw-icon-vector-blue-06-community-312x214.jpg"/>
@@ -37,12 +37,13 @@
       <ion-view class="right-view">
         <ion-content class="message-content">
           <div class="list">
-            <div id="chat-messages" ng-repeat="message in messages"
+            <div id="chat-messages" ng-repeat="message in messages track by $index"
              class="message-wrapper">
 
 
                <div ng-hide="message.userFrom == myId">
-                   <img class="profile-pic left" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png"/>
+                   <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}" class="profile-pic left"/>
+                   <img ng-if="user.image != ''" ng-src="{{user.image}}" class="profile-pic left"/>
 
                    <div class="chat-bubble left">
                      <div class="message" >
@@ -56,7 +57,8 @@
                    </div>
                </div>
                <div ng-show="message.userFrom == myId">
-                 <img class="profile-pic right" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" />
+                 <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}" class="profile-pic right"/>
+                 <img ng-if="user.image != ''" ng-src="{{user.image}}" class="profile-pic right"/>
                    <div class="chat-bubble right">
                       <div class="message" >
                         <span>{{ message.text }}</span>
