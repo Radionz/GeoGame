@@ -137,7 +137,7 @@ angular.module('Game')
     });
 })
 
-.controller('GameCtrl', function($scope, $rootScope, $state, GameService, QuestionService, UserService, $stateParams, $ionicModal, $ionicPopup, ChatRoomService,$ionicScrollDelegate, $timeout) {
+.controller('GameCtrl', function($scope, $rootScope, $state, GameService, QuestionService, UserService, $stateParams, $ionicModal, $ionicPopup, ChatRoomService,$ionicScrollDelegate, $timeout, ServerEndpoint) {
 
   $('.scroll').height('100%');
 
@@ -195,6 +195,9 @@ angular.module('Game')
           QuestionService.getQuestion(questionId).then(function(response) {
             var question = response.data;
             game.questionsBody.push(question);
+
+            question.clue_image_url = ServerEndpoint.url + "/question/" + question._id + "/clue_image";
+
             addQuestionToMap(question);
           });
         });
@@ -281,6 +284,7 @@ angular.module('Game')
 
     var contentString = '<div id="content">'+
     '<h1 id="firstHeading" class="firstHeading">'+question.name+' ('+question.nb_point+' pts)</h1>'+
+    '<img src="'+question.clue_image_url+'" alt="clue image" style="max-width: 500px;"/>'+
     '</div>';
 
     var infowindow = new google.maps.InfoWindow({

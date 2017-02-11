@@ -26,8 +26,6 @@ angular.module('Question')
     },
 
     postQuestionImage: function(id, formData) {
-      console.log(id);
-      console.log(formData);
       return $http.post(ServerEndpoint.url +  "/question/" + id + "/file", formData, {
         transformRequest: angular.identity,
         headers: {'Content-Type': undefined}

@@ -86,7 +86,7 @@
                     <p>radius: {{question.radius}} meters</p>
                   </div>
                   <div class="col-20">
-                    <img src="{{question.clue_image_url}}" alt="Clue image" style="width : 100%;">
+                    <img ng-show="question.clue_image_url" src="{{question.clue_image_url}}" alt="Clue image" style="width : 100%;">
                   </div>
                 </div>
 

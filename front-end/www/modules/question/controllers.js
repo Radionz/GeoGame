@@ -17,6 +17,7 @@ angular.module('Question')
       $scope.questions = questions;
       angular.forEach(questions, function(question) {
         question.clue_image_url = ServerEndpoint.url + "/question/" + question._id + "/clue_image";
+        console.log(question.clue_image_url);
         addQuestionToMap(question);
       });
     });
@@ -41,18 +42,14 @@ angular.module('Question')
 
   $scope.createQuestion = function (question) {
     var formData = question.formData;
-    console.log(formData);
     delete question.clue_image;
-    console.log(question);
     QuestionService.postQuestion(question).then(function(response) {
       var question = response.data;
 
       QuestionService.postQuestionImage(question._id, formData).then(function(response) {
-        console.log("response");
+        $scope.questions.push(question);
+        addQuestionToMap(question);
       });
-
-      $scope.questions.push(question);
-      addQuestionToMap(question);
     });
   }
 
