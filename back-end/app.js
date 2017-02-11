@@ -23,21 +23,21 @@ mongoose.connect(MONGODB_URL + '/geogame-api')
 var app = express();
 
 app.use(function (req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-  // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
 
-  // Pass to next layer of middleware
-  next();
+    // Pass to next layer of middleware
+    next();
 });
 
 app.use(bodyParser.json());
@@ -68,7 +68,7 @@ var Messages = require('./models/Message.js');
 var ChatRoom = require('./models/ChatRoom.js');
 
 // Connected sockets
-var allClients = [];
+var allClients = {};
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
@@ -76,119 +76,176 @@ io.sockets.on('connection', function (socket) {
   var messagesService = Messages;
   var chatroomService = ChatRoom;
 
+  // init socket
+  allClients[socket.id] = {};
+
   socket.on('newclient', function(req) {
 
-    console.log(req)
+      console.log(req)
 
-    allClients[socket] = req;
+      allClients[socket.id] = req;
 
-    ChatRoom.findById(req.chatId, function (err, chatroom) {
+      ChatRoom.findById(req.chatId, function (err, chatroom) {
 
-      if (err) return next(err);
-
-      // transofrm and delete id from object
-      chatObj = chatroom.toObject();
-      delete chatObj._id
-      delete chatObj.__v
-
-      // add user chat
-      chatObj.users.push(req.userId);
-
-      // update
-      ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
-      .populate('messages')
-      .populate('users', ['name', 'email', 'image', 'role'])
-      .exec(function (err, post) {
         if (err) return next(err);
 
-        socket.emit('messages', post.messages);
-        socket.emit('users', post.users);
+        // transofrm and delete id from object
+        chatObj = chatroom.toObject();
+        delete chatObj._id
+        delete chatObj.__v
+
+        // add user chat
+        chatObj.users.push(req.userId);
+
+        // update
+        ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
+                .populate({
+                  path: 'messages',
+                  populate: { path: 'userFrom' }
+                })
+                .populate('users', ['name', 'email', 'image', 'role'])
+                .exec(function (err, post) {
+                    if (err) return next(err);
+                    if (post == null) return null;
+
+                    socket.emit('messages', post.messages);
+                    for (var socketId in allClients) {
+                      if (allClients[socketId].chatId == req.chatId) {
+                        io.sockets.connected[socketId].emit('users', post.users);
+                      }
+                    }
+                });
       });
-    });
   });
 
-  // socket.on('message', function (message) {
-  //     messagesService.create(message, function (err, post) {
-  //         if (err) return next(err);
-  //         socket.emit('message', message);
-  //         socket.broadcast.emit('message', message);
-  //     });
-  // });
+
+  socket.on('leaveChatroom', function(req) {
+    if (allClients[socket.id] == null || req.userId == null || req.chatId == null) {
+      console.log("User or chat undefined: " + allClients[socket.id].userId + " , " + allClients[socket.id].chatId);
+    }
+
+    console.log("User "+ req.userId+ " disconnect from chat " + req.chatId);
+    removeUserFromRoom(req.userId, req.chatId, socket);
+  });
 
   socket.on('disconnect', function() {
+    if (allClients[socket.id].userId == null || allClients[socket.id].chatId == null) {
+      console.log("User or chat undefined: " + allClients[socket.id].userId + " , " + allClients[socket.id].chatId);
+    }
 
-    console.log("disconnect")
-    console.log(allClients[socket].userId);
-    console.log(allClients[socket].chatId);
-    ChatRoom.findById(allClients[socket].chatId, function (err, chatroom) {
+    console.log("User "+ allClients[socket.id].userId+ " disconnect from chat " + allClients[socket.id].chatId);
+    removeUserFromRoom(allClients[socket.id].userId, allClients[socket.id].chatId, socket);
 
-      if (err) return next(err);
+    delete allClients[socket.id];
+  });
 
-      // remove user chat
-      var index;
-      console.log("sauvegardé avec socket "+ allClients[socket]);
-      console.log("ID "+ allClients[socket].userId);
-      console.log("users " + chatObj.users);
-      console.log("ICI " +chatroom.users.indexOf(allClients[socket].userId));
-      // while ((index = chatroom.users.indexOf(allClients[socket].userId)) >= 0) {
-      //   console.log(index);
-      //   chatroom.users.splice(index, 1);
-      // }
-      if ((index = chatroom.users.indexOf(allClients[socket].userId)) >= 0) {
-        chatroom.users.splice(index, 1);
-      }
-      console.log(chatroom.users.length)
 
-      // transofrm and delete id from object
-      chatObj = chatroom.toObject();
-      delete chatObj._id
-      delete chatObj.__v
+  socket.on('message', function (message) {
 
-      // update
-      ChatRoom.findByIdAndUpdate(allClients[socket].chatId, chatObj, {new: true})
-      .populate('users', ['name', 'email', 'image', 'role'])
-      .exec(function (err, post) {
+    Messages.create(message, function (err, created) {
         if (err) return next(err);
 
-        socket.broadcast.emit('users', post.users);
-      });
+        console.log("crerated message with id " + created._id)
+        ChatRoom.findById(allClients[socket.id].chatId, function (err, chatroom) {
+          if (err) return next(err);
+
+          chatObj = chatroom.toObject();
+          console.log("Try to add " + created._id)
+          chatObj.messages.push(created._id);
+
+          delete chatObj._id
+          delete chatObj.__v
+
+          ChatRoom.findByIdAndUpdate(allClients[socket.id].chatId, chatObj, {new: true})
+              .populate({
+                path: 'messages',
+                populate: { path: 'userFrom' }
+              })
+              .exec( function (err, post) {
+                if (err) return next(err);
+
+                created.populate("userFrom", function(err) {
+
+                  delete created.userFrom.password
+
+                  socket.emit('message', created);
+
+                  for (var socketId in allClients) {
+                    if (allClients[socketId].chatId == allClients[socket.id].chatId && allClients[socketId].userId != message.userFrom) {
+                      io.sockets.connected[socketId].emit('message', created);
+                    }
+                  }
+                });
+          });
+        });
     });
 
-    var i = allClients.indexOf(socket);
-    allClients.splice(i, 1);
+
   });
 });
 
+function removeUserFromRoom(userId, chatId, socket) {
+
+  ChatRoom.findById(chatId, function (err, chatroom) {
+    if (err) return next(err);
+    if (chatroom == null) return;
+
+    // remove user chat
+    var index;
+    if ((index = chatroom.users.indexOf(userId)) >= 0) {
+      chatroom.users.splice(index, 1);
+    }
+
+    // transofrm and delete id from object
+    chatObj = chatroom.toObject();
+    delete chatObj._id
+    delete chatObj.__v
+
+    // update
+    ChatRoom.findByIdAndUpdate(chatId, chatObj, {new: true})
+            .populate('users', ['name', 'email', 'image', 'role'])
+            .exec(function (err, post) {
+                if (err) return next(err);
+
+                for (var socketId in allClients) {
+                  if (allClients[socketId].chatId == chatId) {
+                    io.sockets.connected[socketId].emit('users', post.users);
+                  }
+                }
+            });
+    });
+}
+
 //Event listener for HTTP server "error" event.
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-  var bind = typeof PORT === 'string'
-  ? 'Pipe ' + PORT
-  : 'Port ' + PORT;
+    var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-    console.error(bind + ' requires elevated privileges');
-    process.exit(1);
-    break;
-    case 'EADDRINUSE':
-    console.error(bind + ' is already in use');
-    process.exit(1);
-    break;
-    default:
-    throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+        console.error(bind + ' requires elevated privileges');
+        process.exit(1);
+        break;
+        case 'EADDRINUSE':
+        console.error(bind + ' is already in use');
+        process.exit(1);
+        break;
+        default:
+        throw error;
+    }
 }
 
 // Event listener for HTTP server "listening" event.
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-  ? 'pipe ' + addr
-  : 'port ' + addr.port;
-  console.log('Listening on ' + bind);
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+    console.log('Listening on ' + bind);
 }

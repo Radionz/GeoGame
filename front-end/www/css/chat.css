@@ -225,6 +225,6 @@ a.autolinker {
   text-align: center;
 }
 
-.tabs-top {
-  position: relative;
+.scroll-content {
+  margin-top: 24px;
 }

@@ -1,4 +1,4 @@
-<ion-view name="ChatRoom" ng-init="console.log('mamam')">
+<ion-view name="ChatRoom">
 
   <link md-href="styles/chat.css" rel="stylesheet">
 
@@ -9,23 +9,24 @@
 
       <ion-view class="left-view" hide-nav-bar="true">
         <ion-content>
-          <div class="list">
+          <list id="userList">
 
-            <a class="item item-avatar first-user" href="#">
-              <img ng-src="http://usstockoption.com/wp-content/uploads/2016/06/community-icon-vector-maw-icon-vector-blue-06-community-312x214.jpg"/>
+            <a class="item item-avatar first-user active" >
+              <img data-name="All" class="profilePicture"/>
               <h2>All</h2>
-              <p>...</p>
+              <p>{{messages[messages.length-1].text}}</p>
             </a>
             <div class="user-separation">Room users</div>
             <div ng-repeat="user in users">
-              <a class="item item-avatar" href="#">
-                <img ng-src="{{user.image}}"/>
+              <a class="item item-avatar" >
+                <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}"/>
+                <img ng-if="user.image != ''" ng-src="{{user.image}}"/>
                 <h2>{{user.name}}</h2>
                 <p>Dernier message</p>
               </a>
             </div>
 
-          </div>
+          </list>
         </ion-content>
 
         <ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
@@ -36,32 +37,34 @@
       <ion-view class="right-view">
         <ion-content class="message-content">
           <div class="list">
-            <div id="chat-messages" ng-repeat="message in messages"
+            <div id="chat-messages" ng-repeat="message in messages track by $index"
              class="message-wrapper">
 
 
-               <div ng-hide="message.userFrom == myId">
-                   <img class="profile-pic left" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png"/>
+               <div ng-hide="message.userFrom._id == myId">
+                   <img ng-if="message.userFrom.image == ''" data-name="{{message.userFrom.name}}" ng-class="{profilePicture: message.userFrom.image == ''}" class="profile-pic left"/>
+                   <img ng-if="message.userFrom.image != ''" ng-src="{{message.userFrom.image}}" class="profile-pic left"/>
 
                    <div class="chat-bubble left">
                      <div class="message" >
                        <span>{{ message.text }}</span>
                      </div>
                      <div class="message-detail">
-                         <span class="bold">{{message.userFromName}}</span>
+                         <span class="bold">{{message.userFrom.name}}</span>
                          <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
                          <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
                      </div>
                    </div>
                </div>
-               <div ng-show="message.userFrom == myId">
-                 <img class="profile-pic right" ng-src="http://1plusx.com/app/mu-plugins/all-in-one-seo-pack-pro/images/default-user-image.png" />
+               <div ng-show="message.userFrom._id == myId">
+                 <img ng-if="message.userFrom.image == ''" data-name="{{message.userFrom.name}}" ng-class="{profilePicture: message.userFrom.image == ''}" class="profile-pic right"/>
+                 <img ng-if="message.userFrom.image != ''" ng-src="{{message.userFrom.image}}" class="profile-pic right"/>
                    <div class="chat-bubble right">
                       <div class="message" >
                         <span>{{ message.text }}</span>
                       </div>
                       <div class="message-detail">
-                          <span class="bold">{{message.userFromName}}</span>
+                          <span class="bold">{{message.userFrom.name}}</span>
                           <span ng-hide="message.isOlderThanOneDay">at {{message.time | date:'HH:mm'}}</span>
                           <span ng-show="message.isOlderThanOneDay">at {{message.time | date:'dd MMM - HH:mm'}}</span>
                       </div>
