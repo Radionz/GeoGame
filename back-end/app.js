@@ -163,14 +163,19 @@ io.sockets.on('connection', function (socket) {
               })
               .exec( function (err, post) {
                 if (err) return next(err);
-                console.log("sent");
-                socket.emit('message', message);
 
-                for (var socketId in allClients) {
-                  if (allClients[socketId].chatId == allClients[socket.id].chatId && allClients[socketId].userId != message.userFrom) {
-                    io.sockets.connected[socketId].emit('message', message);
+                created.populate("userFrom", function(err) {
+
+                  delete created.userFrom.password
+                  
+                  socket.emit('message', created);
+
+                  for (var socketId in allClients) {
+                    if (allClients[socketId].chatId == allClients[socket.id].chatId && allClients[socketId].userId != message.userFrom) {
+                      io.sockets.connected[socketId].emit('message', created);
+                    }
                   }
-                }
+                });
           });
         });
     });
