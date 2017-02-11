@@ -141,3 +141,33 @@ a[href^="https://maps.google.com/maps"]{display:none !important}
     opacity: 0;
     filter: alpha(opacity=0);
 }
+
+@media (min-width:961px) {
+  .game-list {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto
+  }
+}
+
+@media (min-width:1025px) {
+  .game-list {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto
+  }
+}
+
+.game-list-user {
+  text-align: center;
+}
+
+.user-in-list {
+  border: 0px;
+  margin-left: 11px !important;
+  margin-top: -20px;
+}
+
+.text-user {
+  margin-top: 0px;
+}
