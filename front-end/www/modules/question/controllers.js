@@ -13,11 +13,11 @@ angular.module('Question')
     initMap();
 
     QuestionService.getQuestions().then(function(response) {
-        var questions = response.data;
-        $scope.questions = questions;
-        angular.forEach(questions, function(question) {
-          addQuestionToMap(question);
-        });
+      var questions = response.data;
+      $scope.questions = questions;
+      angular.forEach(questions, function(question) {
+        addQuestionToMap(question);
+      });
     });
 
     $scope.question = {};
@@ -26,11 +26,32 @@ angular.module('Question')
     $scope.question.loc.coordinates = [];
   });
 
+  $('#questionImage').on('change', function (evt) {
+    var files = $(evt.currentTarget).get(0).files;
+
+    if(files.length > 0) {
+      $('#questionImage').siblings('span').text(files[0].name);
+      var formData = new FormData();
+      formData.append('file', files[0]);
+      $scope.question.formData = formData;
+    }
+
+  });
+
   $scope.createQuestion = function (question) {
+    var formData = question.formData;
+    console.log(formData);
+    delete question.clue_image;
+    console.log(question);
     QuestionService.postQuestion(question).then(function(response) {
-        var question = response.data;
-        $scope.questions.push(question);
-        addQuestionToMap(question);
+      var question = response.data;
+
+      QuestionService.postQuestionImage(question._id, formData).then(function(response) {
+        console.log("response");
+      });
+
+      $scope.questions.push(question);
+      addQuestionToMap(question);
     });
   }
 
@@ -152,7 +173,7 @@ angular.module('Question')
 
   $scope.deleteQuestion = function (id, index) {
     QuestionService.deleteQuestion(id).then(function() {
-        $scope.questions.splice(index, 1);
+      $scope.questions.splice(index, 1);
     });
   }
 

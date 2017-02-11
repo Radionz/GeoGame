@@ -7,7 +7,7 @@ angular.module('Question')
       return $http({
         url: ServerEndpoint.url + "/question",
         method: "GET"
-    });
+      });
     },
 
     getQuestion: function(id) {
@@ -22,6 +22,15 @@ angular.module('Question')
         url: ServerEndpoint.url + "/question",
         method: "POST",
         data: question
+      });
+    },
+
+    postQuestionImage: function(id, formData) {
+      console.log(id);
+      console.log(formData);
+      return $http.post(ServerEndpoint.url +  "/question/" + id + "/file", formData, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
       });
     },
 

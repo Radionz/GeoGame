@@ -23,21 +23,21 @@ mongoose.connect(MONGODB_URL + '/geogame-api')
 var app = express();
 
 app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
 
-    // Pass to next layer of middleware
-    next();
+  // Pass to next layer of middleware
+  next();
 });
 
 app.use(bodyParser.json());
@@ -78,33 +78,33 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('newclient', function(req) {
 
-      console.log(req)
+    console.log(req)
 
-      allClients[socket] = req;
+    allClients[socket] = req;
 
-      ChatRoom.findById(req.chatId, function (err, chatroom) {
+    ChatRoom.findById(req.chatId, function (err, chatroom) {
 
+      if (err) return next(err);
+
+      // transofrm and delete id from object
+      chatObj = chatroom.toObject();
+      delete chatObj._id
+      delete chatObj.__v
+
+      // add user chat
+      chatObj.users.push(req.userId);
+
+      // update
+      ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
+      .populate('messages')
+      .populate('users', ['name', 'email', 'image', 'role'])
+      .exec(function (err, post) {
         if (err) return next(err);
 
-        // transofrm and delete id from object
-        chatObj = chatroom.toObject();
-        delete chatObj._id
-        delete chatObj.__v
-
-        // add user chat
-        chatObj.users.push(req.userId);
-
-        // update
-        ChatRoom.findByIdAndUpdate(req.chatId, chatObj, {new: true})
-                .populate('messages')
-                .populate('users', ['name', 'email', 'image', 'role'])
-                .exec(function (err, post) {
-                    if (err) return next(err);
-
-                    socket.emit('messages', post.messages);
-                    socket.emit('users', post.users);
-                });
+        socket.emit('messages', post.messages);
+        socket.emit('users', post.users);
       });
+    });
   });
 
   // socket.on('message', function (message) {
@@ -146,49 +146,49 @@ io.sockets.on('connection', function (socket) {
 
       // update
       ChatRoom.findByIdAndUpdate(allClients[socket].chatId, chatObj, {new: true})
-              .populate('users', ['name', 'email', 'image', 'role'])
-              .exec(function (err, post) {
-                  if (err) return next(err);
+      .populate('users', ['name', 'email', 'image', 'role'])
+      .exec(function (err, post) {
+        if (err) return next(err);
 
-                  socket.broadcast.emit('users', post.users);
-              });
+        socket.broadcast.emit('users', post.users);
       });
+    });
 
-      var i = allClients.indexOf(socket);
-      allClients.splice(i, 1);
-   });
+    var i = allClients.indexOf(socket);
+    allClients.splice(i, 1);
+  });
 });
 
 //Event listener for HTTP server "error" event.
 function onError(error) {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
 
-    var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof PORT === 'string'
+  ? 'Pipe ' + PORT
+  : 'Port ' + PORT;
 
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-        case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-        case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-        default:
-        throw error;
-    }
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+    console.error(bind + ' requires elevated privileges');
+    process.exit(1);
+    break;
+    case 'EADDRINUSE':
+    console.error(bind + ' is already in use');
+    process.exit(1);
+    break;
+    default:
+    throw error;
+  }
 }
 
 // Event listener for HTTP server "listening" event.
 function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-    console.log('Listening on ' + bind);
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+  ? 'pipe ' + addr
+  : 'port ' + addr.port;
+  console.log('Listening on ' + bind);
 }

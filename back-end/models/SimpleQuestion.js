@@ -7,6 +7,7 @@ var SimpleQuestionSchema = new mongoose.Schema({
     radius: { type: Number, default: '10' },
     answer: String,
     nb_point: Number,
+    clue_image: String,
     loc: {
         type: { type: String, default: 'Point' },
         coordinates: [Number]
