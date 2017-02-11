@@ -65,10 +65,6 @@ angular.module('Chat')
      disableBack: true
     });
 
-    if ($stateParams.id == "Global") {
-     console.log('Global!')
-    }
-
     var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
 
     $scope.sendMessage = function() {
@@ -105,7 +101,6 @@ angular.module('Chat')
     };
 
     $scope.data = {};
-    console.log($scope.messages);
     $ionicScrollDelegate.scrollBottom(true);
 
 

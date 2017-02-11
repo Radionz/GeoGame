@@ -1,10 +1,148 @@
 angular.module('Game')
 
-.controller('GameCtrl', function($scope, $rootScope, $state, GameService, QuestionService, UserService, $stateParams, $ionicModal, $ionicPopup) {
+.controller('ChatPopupCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate,
+    $ionicHistory, UserService, ChatRoomService, ServerEndpoint) {
+
+    var chatId, isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+    $scope.data = {};
+
+    if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
+      $scope.myId = localStorage.getItem("userId");
+    }
+
+    // EVENTS HERE //
+
+    var updateUsers = function(users) {
+      var unique = users.filter(function(elem, index, self) {
+          return index == self.indexOf(elem);
+      });
+      $scope.users = unique;
+      $scope.$apply();
+      $('.profilePicture').initial();
+      $ionicScrollDelegate.scrollBottom(false);
+    };
+
+    var updateMessage = function(message) {
+      $scope.messages.push(message);
+      $scope.$apply();
+      $('.profilePicture').initial();
+      $ionicScrollDelegate.scrollBottom(true);
+    };
+
+    var updateMessages = function(messages) {
+      $scope.messages = [];
+      messages.forEach(function(message){
+        if (((new Date) - new Date(message.time)) >  24 * 60 * 60 * 1000) {
+          message.isOlderThanOneDay = true;
+        }
+        $scope.messages.push(message);
+      });
+
+      $ionicScrollDelegate.scrollBottom(false);
+    };
+
+    // fINISH EVENTS //
+
+    $rootScope.socket.on('messages', updateMessages);
+    $rootScope.socket.on('message', updateMessage);
+    $rootScope.socket.on('users', updateUsers);
+
+    $scope.sendMessage = function() {
+
+      var date = new Date();
+      date = date.toLocaleTimeString().replace(/:\d+ /, ' ');
+
+      $scope.socket.emit('message', {
+        userFrom: $scope.myId,
+        userFromName: $rootScope.loggedInUser.name,
+        text: $scope.data.message,
+        time: new Date()
+      });
+      $scope.data = {};
+      $ionicScrollDelegate.scrollBottom(true);
+    };
+
+    $scope.inputUp = function() {
+      if (isIOS) $scope.data.keyboardHeight = 216;
+      $timeout(function() {
+        $ionicScrollDelegate.scrollBottom(true);
+      }, 300);
+
+    };
+    $scope.$on("modal.shown", function(event, data){
+
+        if (data.el.innerHTML.indexOf("chatModal") < 0) {
+            return;
+        }
+
+        if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
+          $scope.myId = localStorage.getItem("userId");
+
+          // TODO Change here the name
+          ChatRoomService.getChatRoomFromName("Global")
+          .then(function(chats) {
+
+            if (chats.data.length === 0) {
+              console.log("No room to join founded");
+              return;
+            }
+
+            chatId = chats.data[0]._id;
+            // Create request for joining room
+            var req = {
+              chatId : chatId,
+              userId : $scope.myId
+            }
+            $rootScope.socket.emit('newclient', req);
+
+          });
+        }
+        else {
+          console.log("You haven't an ID. Can't open the chat");
+        }
+
+
+        $scope.inputUp = function() {
+          if (isIOS) $scope.data.keyboardHeight = 216;
+          $timeout(function() {
+            $ionicScrollDelegate.scrollBottom(true);
+          }, 300);
+
+        };
+
+        $scope.inputDown = function() {
+          if (isIOS) $scope.data.keyboardHeight = 0;
+          $ionicScrollDelegate.resize();
+        };
+
+        $scope.closeKeyboard = function() {
+          // cordova.plugins.Keyboard.close();
+        };
+    });
+
+    $scope.$on('modal.hidden', function(event, data) {
+
+      if (data.el.innerHTML.indexOf("chatModal") < 0) {
+          return;
+      }
+
+      var req = {
+        chatId : chatId,
+        userId : $scope.myId
+      }
+      $rootScope.socket.removeListener('users', updateUsers);
+      $rootScope.socket.removeListener('message', updateMessage);
+      $rootScope.socket.removeListener('messages', updateMessages);
+      $rootScope.socket.emit('leaveChatroom', req);
+    });
+})
+
+.controller('GameCtrl', function($scope, $rootScope, $state, GameService, QuestionService, UserService, $stateParams, $ionicModal, $ionicPopup, ChatRoomService,$ionicScrollDelegate, $timeout) {
 
   $('.scroll').height('100%');
 
  var styles = [ { "elementType": "geometry", "stylers": [ { "color": "#ebe3cd" } ] }, { "elementType": "labels.text.fill", "stylers": [ { "color": "#523735" } ] }, { "elementType": "labels.text.stroke", "stylers": [ { "color": "#f5f1e6" } ] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [ { "color": "#c9b2a6" } ] }, { "featureType": "administrative.land_parcel", "elementType": "geometry.stroke", "stylers": [ { "color": "#dcd2be" } ] }, { "featureType": "administrative.land_parcel", "elementType": "labels.text.fill", "stylers": [ { "color": "#ae9e90" } ] }, { "featureType": "landscape.natural", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "poi", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "poi", "elementType": "labels.text.fill", "stylers": [ { "color": "#93817c" } ] }, { "featureType": "poi.business", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.government", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.medical", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.park", "elementType": "geometry.fill", "stylers": [ { "color": "#a5b076" } ] }, { "featureType": "poi.park", "elementType": "labels.text.fill", "stylers": [ { "color": "#447530" } ] }, { "featureType": "poi.place_of_worship", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.sports_complex", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road", "elementType": "geometry", "stylers": [ { "color": "#f5f1e6" } ] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [ { "color": "#fdfcf8" } ] }, { "featureType": "road.highway", "elementType": "geometry", "stylers": [ { "color": "#f8c967" } ] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [ { "color": "#e9bc62" } ] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry", "stylers": [ { "color": "#e98d58" } ] }, { "featureType": "road.highway.controlled_access", "elementType": "geometry.stroke", "stylers": [ { "color": "#db8555" } ] }, { "featureType": "road.local", "elementType": "labels.text.fill", "stylers": [ { "color": "#806b63" } ] }, { "featureType": "transit", "stylers": [ { "visibility": "off" } ] }, { "featureType": "transit.line", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "transit.line", "elementType": "labels.text.fill", "stylers": [ { "color": "#8f7d77" } ] }, { "featureType": "transit.line", "elementType": "labels.text.stroke", "stylers": [ { "color": "#ebe3cd" } ] }, { "featureType": "transit.station", "elementType": "geometry", "stylers": [ { "color": "#dfd2ae" } ] }, { "featureType": "water", "elementType": "geometry.fill", "stylers": [ { "color": "#b9d3c2" } ] }, { "featureType": "water", "elementType": "labels.text.fill", "stylers": [ { "color": "#92998d" } ] } ];
+
 
   var image = {
     url: 'img/question_marker.png',
@@ -14,6 +152,12 @@ angular.module('Game')
   };
 
   $scope.$on("$ionicView.enter", function(event, data){
+
+    // CHAT HERE //
+
+    // CHAT HERE //
+
+
     if (typeof $rootScope.loggedInUser === "undefined") {
       $state.go("app.signIn");
     }else {

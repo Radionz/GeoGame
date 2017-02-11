@@ -198,6 +198,7 @@ a.autolinker {
 .chat {
   padding-left: 0px;
   padding-top: 0px;
+  margin-top: 49px;
 }
 
 .users {
@@ -207,11 +208,13 @@ a.autolinker {
 .left-view {
   left: 0;
   width: 25%;
+  height: 100%;
 }
 
 .right-view {
   left: 25%;
   width: 75%;
+  height: 100%;
 }
 
 .message-content {
@@ -225,6 +228,6 @@ a.autolinker {
   text-align: center;
 }
 
-.scroll-content {
-  margin-top: 24px;
+.chat-content {
+
 }
