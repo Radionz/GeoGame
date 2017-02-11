@@ -33,7 +33,6 @@ angular.module('Chat')
 
   var updateMessage = function(message) {
     $scope.messages.push(message);
-    $scope.data = {};
     $scope.$apply();
     $('.profilePicture').initial();
     $ionicScrollDelegate.scrollBottom(true);
@@ -83,7 +82,7 @@ angular.module('Chat')
         text: $scope.data.message,
         time: new Date()
       });
-
+      $scope.data = {};
       $ionicScrollDelegate.scrollBottom(true);
     };
 
