@@ -27,16 +27,17 @@ router.post('/', function(req, res, next) {
 /* POST /question/:id/file */
 router.post('/:id/file', function(req, res, next) {
 
+  var imagePath = __dirname.replaceAll("\\",'/') + '/uploads/' + req.params.id + ".jpg";
   var form = new formidable.IncomingForm();
-
   form.parse(req);
-
   form.on('fileBegin', function (name, file){
-    file.path = __dirname + '/uploads/' + req.params.id + '.jpg';
+    file.path = imagePath;
   });
-  
-  form.on('file', function (name, file){
-    console.log('Uploaded ' + req.params.id + '.jpg');
+
+  SimpleQuestion.findById(req.params.id, function (err, post) {
+    if (err) return next(err);
+    post.clue_image = imagePath;
+    post.save();
   });
 
 });
@@ -64,5 +65,10 @@ router.delete('/:id', function(req, res, next) {
     res.json(post);
   });
 });
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
 
 module.exports = router;
