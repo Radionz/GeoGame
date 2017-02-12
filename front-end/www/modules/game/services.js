@@ -26,13 +26,14 @@ angular.module('Game')
     },
 
     putGame: function(game) {
-      var gameId = game._id;
-      delete game._id;
+      var copiedGame = jQuery.extend(true, {}, game);
+      var gameId = copiedGame._id;
+      delete copiedGame._id;
       console.log(game);
       return $http({
         url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
-        data: game
+        data: copiedGame
       });
     },
 
@@ -76,8 +77,9 @@ angular.module('Game')
     },
 
     putScoreBoardEntry: function(game, scoreBoardEntry) {
-      var gameId = game._id;
-      delete game._id;
+      var copiedGame = jQuery.extend(true, {}, game);
+      var gameId = copiedGame._id;
+      delete copiedGame._id;
       return $http({
         url: ServerEndpoint.url + "/game/" + gameId + "/scoreBoardEntry/" + $rootScope.loggedInUser._id,
         method: "PUT",

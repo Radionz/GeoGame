@@ -210,8 +210,6 @@ angular.module('Game')
           $scope.game = game;
         });
 
-        console.log($rootScope.loggedInUser);
-
         $scope.$on("$ionicView.leave", function(event, data){
 
         });
@@ -223,7 +221,6 @@ angular.module('Game')
       UserService.getUser(userId).then(function(response){
         currentUser = response.data;
       });
-      console.log(currentUser);
       return currentUser.name;
     }
 
@@ -264,7 +261,6 @@ angular.module('Game')
       });
 
       addViewChatButton($scope.map).addEventListener('click', function() {
-        console.log("YEP");
         $scope.modalChat.show();
       });
     };
@@ -301,6 +297,9 @@ angular.module('Game')
       });
     };
 
+    var open = false,
+    questionPopUp = null;
+
     $scope.$on("newPosition", function(event, latlng){
 
       // Update player position
@@ -311,65 +310,131 @@ angular.module('Game')
           scoreBoardEntry.loc.coordinates[0] = latlng.lng();
           scoreBoardEntry.loc.coordinates[1] = latlng.lat();
 
-          console.log(scoreBoardEntry);
           GameService.putScoreBoardEntry($scope.game, scoreBoardEntry).then(function(response){
-            console.log(response.data);
           });
           return;
         }
       });
 
-
+      // Check you're in question circle
       angular.forEach($scope.game.questionsBody, function(question) {
-        if(!question.isOpen){
-          question.isOpen = false;
-        }
+
         var questionPosition = new google.maps.LatLng(question.loc.coordinates[1], question.loc.coordinates[0]);
 
         var distance = google.maps.geometry.spherical.computeDistanceBetween(latlng, questionPosition);
 
         $scope.data = {};
-        if(distance <= question.radius && !isQuestionAnswered(question.id, $rootScope.loggedInUser._id)){
-          var questionPopUp = $ionicPopup.show({
-            template: '<input type="text" ng-model="data.answer">',
+        if(!open && !isQuestionAnswered(question._id, $rootScope.loggedInUser._id) && distance <= question.radius){
+          open = true;
+
+          if (question.answerType == "Text") {
+            $scope.popupInput = '<input id="inputText" type="text" ng-model="data.answer">';
+          }
+          if (question.answerType == "Picture") {
+            $scope.popupInput = '<label id="inputPicture" class="fileUpload item-input  button button-block button-positive" style="margin : 10px 0px;">'+
+            '<i class="icon ion-image"></i>'+
+            '<span> Send a picture to answer</span>'+
+            '<input class="upload button button-block button-positive" style="margin-left : 0px;" type="file" accept="image/*" id="questionImage">'+
+            '</label>'+
+            '<script>';
+          }
+
+          questionPopUp = $ionicPopup.show({
+            template: ''+
+            '<img src="'+question.clue_image_url+'" alt="clue image" style="max-width: 480px; margin: auto; margin-bottom: 15px; display: block;"/>'+
+            '<p>Your answer</p>'+
+            $scope.popupInput,
             title: question.name,
             subTitle: question.question,
             scope: $scope,
             buttons: [
-              { text: 'Cancel' },
               {
-                text: '<b>Answer</b>',
+                text: '<b>Send my Answer</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                  if ($scope.data.answer != question.answer) {
-                    //don't allow the user to close unless he enters wifi password
-                    e.preventDefault();
+                  console.log($scope.data.answer);
+                  if ($scope.data.answer == "") {
+                      e.preventDefault();
                   }
                   else {
-                    addPointsToScore($rootScope.loggedInUser._id, question);
+                    submitAnswer($rootScope.loggedInUser._id, question);
                   }
                 }
               }
             ]
           });
+
+          questionPopUp.then(function(res) {
+            open = false;
+            $scope.showAlert = function() {
+              var alertPopup = $ionicPopup.alert({
+                title: 'Yes ! Response is saved',
+                template: 'The game master will examine your answer !'
+              });
+
+              alertPopup.then(function(res) {
+                console.log("popupclosed");
+                console.log(res);
+              });
+            };
+
+          });
         }
 
       });
 
-    }) ;
+    });
+
+    $('#questionImage').on('change', function (evt) {
+      console.log("here");
+      var files = $(evt.currentTarget).get(0).files;
+
+      if(files.length > 0) {
+        $('#questionImage').siblings('span').text(files[0].name);
+        var formData = new FormData();
+        formData.append('file', files[0]);
+        $scope.data.formData = formData;
+      }
+
+    });
 
     function isQuestionAnswered(questionId, userId){
       angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
         if(scoreBoardEntry.user._id == userId){
-          angular.forEach(scoreBoardEntry.questionsAnswered, function(question){
-            if(question == questionId) return true;
+          angular.forEach(scoreBoardEntry.questionsAnswered, function(questionAnswered){
+            if (questionId == questionsAnswered.questionId && questionsAnswered.status != "NOT_ANSWERED") {
+              return true;
+            }
           });
         }
       });
       return false;
     }
 
-    function addPointsToScore(userId, question){
+    function submitAnswer(userId, question){
+
+      angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
+        if(scoreBoardEntry.user._id == userId){
+          scoreBoardEntry.questionsAnswered.questionId = question._id;
+          if (question.answerType == "Text") {
+            scoreBoardEntry.questionsAnswered.answer = $scope.data.answer;
+          }
+          if (question.answerType == "Picture") {
+            scoreBoardEntry.questionsAnswered.answer = $scope.game._id + "-" + question._id + "-" + userId + ".jpg";
+          }
+          scoreBoardEntry.questionsAnswered.status = "ANSWERED";
+          console.log(scoreBoardEntry);
+          // GameService.putScoreBoardEntry($scope.game, scoreBoardEntry).then(function(response){
+          // });
+          return;
+        }
+      });
+
+      Game.postAnswerImage($scope.game._id, userId, question._id, formData).then(function(response) {
+        $scope.questions.push(question);
+        addQuestionToMap(question);
+      });
+
       angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
         if(scoreBoardEntry.user._id == userId){
           scoreBoardEntry.score = scoreBoardEntry.score+question.nb_points;

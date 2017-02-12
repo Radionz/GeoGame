@@ -17,7 +17,6 @@ angular.module('Question')
       $scope.questions = questions;
       angular.forEach(questions, function(question) {
         question.clue_image_url = ServerEndpoint.url + "/question/" + question._id + "/clue_image";
-        console.log(question.clue_image_url);
         addQuestionToMap(question);
       });
     });
