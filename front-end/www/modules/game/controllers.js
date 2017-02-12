@@ -295,6 +295,18 @@ angular.module('Game')
       marker.addListener('click', function() {
         infowindow.open($scope.map, marker);
       });
+
+      $rootScope.changeInputImage = function (evt) {
+        console.log("here");
+        var files = evt.files;
+
+        if(files.length > 0) {
+          $('#questionImage').siblings('span').text(files[0].name);
+          var formData = new FormData();
+          formData.append('file', files[0]);
+          $scope.data.formData = formData;
+        }
+      };
     };
 
     var open = false,
@@ -334,7 +346,7 @@ angular.module('Game')
             $scope.popupInput = '<label id="inputPicture" class="fileUpload item-input  button button-block button-positive" style="margin : 10px 0px;">'+
             '<i class="icon ion-image"></i>'+
             '<span> Send a picture to answer</span>'+
-            '<input class="upload button button-block button-positive" style="margin-left : 0px;" type="file" accept="image/*" id="questionImage">'+
+            '<input class="upload button button-block button-positive" style="margin-left : 0px;" type="file" accept="image/*" id="questionImage" onchange="angular.element(this).scope().changeInputImage(this)">'+
             '</label>'+
             '<script>';
           }
@@ -385,18 +397,7 @@ angular.module('Game')
 
     });
 
-    $('#questionImage').on('change', function (evt) {
-      console.log("here");
-      var files = $(evt.currentTarget).get(0).files;
 
-      if(files.length > 0) {
-        $('#questionImage').siblings('span').text(files[0].name);
-        var formData = new FormData();
-        formData.append('file', files[0]);
-        $scope.data.formData = formData;
-      }
-
-    });
 
     function isQuestionAnswered(questionId, userId){
       angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){

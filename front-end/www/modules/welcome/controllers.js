@@ -47,6 +47,8 @@ angular.module('Welcome')
       }, 1000);
     }
   }
+
+  $('.profilePicture').initial();
 })
 
 
