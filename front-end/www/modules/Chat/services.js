@@ -24,11 +24,11 @@ angular.module('Chat')
       });
     },
 
-    postChatRoom: function(message) {
+    postChatRoom: function(chat) {
       return $http({
         url: ServerEndpoint.url + "/chatroom",
         method: "POST",
-        data: message
+        data: chat
       });
     },
 

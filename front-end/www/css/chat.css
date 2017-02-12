@@ -228,6 +228,26 @@ a.autolinker {
   text-align: center;
 }
 
-.chat-content {
+.blue-team-chat {
+  background: linear-gradient(90deg, white 95%, #209FFF 5%);
+}
 
+.red-team-chat {
+  background: linear-gradient(90deg, white 95%, #FF0000 5%);
+}
+
+.green-team-chat {
+  background: linear-gradient(90deg, white 95%, #4D9221 5%);
+}
+
+.yellow-team-chat {
+  background: linear-gradient(90deg, white 95%, #FFBF00 5%);
+}
+
+.pink-team-chat {
+  background: linear-gradient(90deg, white 95%, #FF7FBF 5%);
+}
+
+.user-list-divider {
+  background-color : #b2b2b2;
 }

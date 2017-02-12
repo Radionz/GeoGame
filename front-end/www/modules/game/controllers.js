@@ -1,7 +1,7 @@
 angular.module('Game')
 
 .controller('ChatPopupCtrl', function($scope, GameService, $rootScope, $interval, $timeout, $ionicScrollDelegate,
-    $ionicHistory, UserService, ChatRoomService, ServerEndpoint) {
+    $ionicHistory, UserService, ChatRoomService, ServerEndpoint, $stateParams) {
 
     var chatId, isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
     $scope.data = {};
@@ -78,24 +78,29 @@ angular.module('Game')
         if (typeof(Storage) !== "undefined" && localStorage.getItem("userId") !== null) {
           $scope.myId = localStorage.getItem("userId");
 
-          // TODO Change here the name
-          ChatRoomService.getChatRoomFromName("Global")
-          .then(function(chats) {
+          GameService.getGame($stateParams.id)
+            .then(function(response) {
 
-            if (chats.data.length === 0) {
-              console.log("No room to join founded");
-              return;
-            }
+              var roomName = response.data.name;
+              ChatRoomService.getChatRoomFromName("ChatRoom " + roomName)
+              .then(function(chats) {
 
-            chatId = chats.data[0]._id;
-            // Create request for joining room
-            var req = {
-              chatId : chatId,
-              userId : $scope.myId
-            }
-            $rootScope.socket.emit('newclient', req);
+                if (chats.data.length === 0) {
+                  console.log("No room to join founded");
+                  return;
+                }
 
-          });
+                chatId = chats.data[0]._id;
+                // Create request for joining room
+                var req = {
+                  chatId : chatId,
+                  userId : $scope.myId
+                }
+                $rootScope.socket.emit('newclient', req);
+
+              });
+            });
+
         }
         else {
           console.log("You haven't an ID. Can't open the chat");
@@ -568,7 +573,7 @@ angular.module('Game')
   }
 })
 
-.controller('GameManagerCtrl', function($scope, $interval, GameService, QuestionService) {
+.controller('GameManagerCtrl', function($scope, $interval, GameService, QuestionService, ChatRoomService) {
 
   $scope.$on("$ionicView.enter", function(event, data){
     GameService.getGames().then(function(response) {
@@ -614,6 +619,13 @@ angular.module('Game')
       startCountDown(game, $interval);
       $scope.games.push(game);
       $scope.initForm();
+
+      var chatRoom = {
+        name: "ChatRoom " + game.name,
+        users: [],
+        messages: []
+      }
+      ChatRoomService.postChatRoom(chatRoom);
     });
   };
 
@@ -660,6 +672,10 @@ angular.module('Game')
   $scope.deleteGame = function (id, index) {
     GameService.deleteGame(id).then(function(response) {
       $scope.games.splice(index, 1);
+      ChatRoomService.getChatRoomFromName("ChatRoom " +response.data.name)
+        .then(function(data) {
+          ChatRoomService.deleteChatRoom(data.data[0]._id);
+        });
     });
   };
 

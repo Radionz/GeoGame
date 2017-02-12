@@ -141,3 +141,62 @@ a[href^="https://maps.google.com/maps"]{display:none !important}
     opacity: 0;
     filter: alpha(opacity=0);
 }
+
+@media (min-width:961px) {
+  .game-list {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto
+  }
+}
+
+@media (min-width:1025px) {
+  .game-list {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto
+  }
+}
+
+.game-list-user {
+  text-align: center;
+}
+
+.user-in-list {
+  border: 0px;
+  padding-right: 0px;
+}
+
+.text-user {
+  margin-top: 0px;
+}
+
+.blue-team {
+  background-color: #209FFF;
+  color: white;
+}
+
+.yellow-team {
+  background-color: #FFBF00;
+  color: black;
+}
+
+.red-team {
+  background-color: #FF0000;
+  color: white;
+}
+
+.green-team {
+  background-color: #4D9221;
+  color: white;
+}
+
+.pink-team {
+  background-color: #FF7FBF;
+  color: white;
+}
+
+.rounded-frame {
+  border-radius : 10px;
+  margin-left: 10px;
+}
