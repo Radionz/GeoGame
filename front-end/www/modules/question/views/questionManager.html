@@ -17,7 +17,14 @@
                 <span class="input-label">Question</span>
                 <input type="text" placeholder="Question" ng-model="question.question">
               </label>
-              <label class="item item-input item-floating-label">
+              <div class="item">
+                <p>Answer to the question can be a text answer or a picture (choose below)</p>
+              </div>
+              <ion-list>
+                <ion-radio ng-model="question.answerType" ng-value="'Text'">Text answer</ion-radio>
+                <ion-radio ng-model="question.answerType" ng-value="'Picture'">Picture</ion-radio>
+              </ion-list>
+              <label ng-show="question.answerType == 'Text'" class="item item-input item-floating-label">
                 <span class="input-label">Answer</span>
                 <input type="text" placeholder="Answer" ng-model="question.answer">
               </label>
@@ -81,7 +88,8 @@
                   <div class="col-80">
                     <h2>{{question.name}} ({{question.nb_point}} pts)</h2>
                     <p>Question: {{question.question}}</p>
-                    <p>Answer: {{question.answer}}</p>
+                    <p>Answer type: {{question.answerType}}</p>
+                    <p ng-show="question.answerType == 'Text'">Answer: {{question.answer}}</p>
                     <p>location: {{question.loc.coordinates[0]}}/{{question.loc.coordinates[1]}}</p>
                     <p>radius: {{question.radius}} meters</p>
                   </div>

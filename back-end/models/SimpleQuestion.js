@@ -5,6 +5,7 @@ var SimpleQuestionSchema = new mongoose.Schema({
     name: { type : String, required : true, index: {unique: true} },
     question: String,
     radius: { type: Number, default: '10' },
+    answerType: { type: String, enum: ['Text', 'Picture'], default: 'Text'},
     answer: String,
     nb_point: Number,
     clue_image: String,

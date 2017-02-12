@@ -24,6 +24,7 @@ angular.module('Question')
 
     $scope.question = {};
     $scope.question.loc = {};
+    $scope.question.answerType = "Text";
     $scope.question.radius = 150;
     $scope.question.loc.coordinates = [];
   });

@@ -1,3 +1,9 @@
+var QuestionsAnsweredSchema = new mongoose.Schema({
+  questionId: String,
+  answer: String,
+  status:  { type : String, enum: ['NOT_ANSWERED', 'ANSWERED', 'VALID', 'INVALID'], default: 'NOT_ANSWERED'},
+},{ _id : false });
+
 var ScoreBoardSchema = new mongoose.Schema({
   user: { type : mongoose.Schema.Types.ObjectId, ref: 'User', required : true},
   loc: {
@@ -5,7 +11,7 @@ var ScoreBoardSchema = new mongoose.Schema({
       coordinates: [Number]
   },
   score: { type : Number, default: 0 },
-  questionsAnswered: [String]
+  questionsAnswered: [QuestionsAnsweredSchema]
 },{ _id : false });
 
 var GameSchema = new mongoose.Schema({
