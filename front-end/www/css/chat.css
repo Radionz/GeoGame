@@ -247,3 +247,7 @@ a.autolinker {
 .pink-team-chat {
   background: linear-gradient(90deg, white 95%, #FF7FBF 5%);
 }
+
+.user-list-divider {
+  background-color : #b2b2b2;
+}

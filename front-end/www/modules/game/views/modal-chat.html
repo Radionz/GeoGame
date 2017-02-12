@@ -11,7 +11,9 @@
       <ion-view class="left-view" hide-nav-bar="true">
         <ion-content>
           <list>
-            <div class="user-separation">Room users</div>
+            <div class="item item-divider user-list-divider">
+              Room Users
+            </div>
             <div ng-repeat="user in users">
               <a class="item item-avatar" ng-class="{'{{board.user.team}}-team-chat' : board.user.team != ''}">
                 <img ng-if="user.image == ''" data-name="{{user.name}}" ng-class="{profilePicture: user.image == ''}"/>
