@@ -335,8 +335,7 @@ angular.module('Game')
             '<i class="icon ion-image"></i>'+
             '<span> Send a picture to answer</span>'+
             '<input class="upload button button-block button-positive" style="margin-left : 0px;" type="file" accept="image/*" id="questionImage">'+
-            '</label>'+
-            '<script>';
+            '</label>';
           }
 
           questionPopUp = $ionicPopup.show({
