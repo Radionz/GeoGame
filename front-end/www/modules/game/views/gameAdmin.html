@@ -36,5 +36,35 @@
       </div>
       <!-- /col-67  -->
     </div>
+    <div class="row responsive-md">
+      <div class="col-33">
+        <div class="card">
+          <div class="item item-divider item-icon-right" style=" background-color: #e2e5ea;">
+            <i class="icon ion-map"></i>
+            ScoreBoard
+          </div>
+          <div class="item item-text-wrap">
+            <div class="list">
+              <li class="item item-icon-left" ng-repeat="scoreBoardEntry in game.scoreBoard | orderBy:'-score'">
+                <i class="icon ion-trophy balanced" ng-show="$index == 0"></i>
+                <h2>{{$index + 1}} -- {{scoreBoardEntry.user.name}} <span ng-show="scoreBoardEntry.user._id == $root.loggedInUser._id"> (me)</span></h2>
+                <p>{{scoreBoardEntry.score}} points</p>
+              </li>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-67">
+        <div class="card">
+          <div class="item item-divider" style=" background-color: #e2e5ea;">
+            Answered questions
+          </div>
+          <div class="item" style="padding: 5px;">
+
+          </div>
+        </div>
+      </div>
+      <!-- /col-67  -->
+    </div>
   </ion-content>
 </ion-view>
