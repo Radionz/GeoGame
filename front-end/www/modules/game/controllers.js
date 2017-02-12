@@ -746,15 +746,21 @@ angular.module('Game')
       }
       markers = [];
 
-      for (var i = 0; i < players.length; i++) {
-        players[i].setMap(null);
-      }
-      players = [];
+      clearInterval(interval);
+      var interval =setInterval(function () {
+        GameService.getGame(game._id).then(function(response) {
+          $scope.game = response.data;
+        });
+        for (var i = 0; i < players.length; i++) {
+          players[i].setMap(null);
+        }
+        players = [];
 
+        angular.forEach(game.scoreBoard, function(player) {
+          addPlayerToMap(player);
+        });
+      },1000);
 
-      angular.forEach(game.scoreBoard, function(player) {
-        addPlayerToMap(player);
-      });
 
       game.questionsBody = [];
       angular.forEach(game.questions, function(questionId) {
