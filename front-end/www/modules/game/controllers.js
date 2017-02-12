@@ -184,6 +184,8 @@ angular.module('Game')
           scoreBoardEntry.user = {};
           scoreBoardEntry.user._id = $rootScope.loggedInUser._id;
           scoreBoardEntry.score = 0;
+          scoreBoardEntry.loc = {};
+          scoreBoardEntry.loc.coordinates = [];
           game.scoreBoard.push(scoreBoardEntry);
 
           GameService.putGame(game).then(function(response) {
@@ -298,6 +300,23 @@ angular.module('Game')
 
   $scope.$on("newPosition", function(event, latlng){
 
+    // Update player position
+    angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
+      if(scoreBoardEntry.user._id == $rootScope.loggedInUser._id){
+        scoreBoardEntry.loc = {};
+        scoreBoardEntry.loc.coordinates = [];
+        scoreBoardEntry.loc.coordinates[0] = latlng.lng();
+        scoreBoardEntry.loc.coordinates[1] = latlng.lat();
+
+        console.log(scoreBoardEntry);
+        GameService.putScoreBoardEntry($scope.game, scoreBoardEntry).then(function(response){
+          console.log(response.data);
+        });
+        return;
+      }
+    });
+
+
     angular.forEach($scope.game.questionsBody, function(question) {
       if(!question.isOpen){
         question.isOpen = false;
@@ -307,7 +326,7 @@ angular.module('Game')
       var distance = google.maps.geometry.spherical.computeDistanceBetween(latlng, questionPosition);
 
       $scope.data = {};
-      if(distance <= question.radius && !isQuestionAnswered(question.id, $rootScope.loggedInUser.id)){
+      if(distance <= question.radius && !isQuestionAnswered(question.id, $rootScope.loggedInUser._id)){
         var questionPopUp = $ionicPopup.show({
           template: '<input type="text" ng-model="data.answer">',
           title: question.name,
@@ -324,7 +343,7 @@ angular.module('Game')
                   e.preventDefault();
                 }
                 else {
-                  addPointsToScore($rootScope.loggedInUser.id, question);
+                  addPointsToScore($rootScope.loggedInUser._id, question);
                 }
               }
             }

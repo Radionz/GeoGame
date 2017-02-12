@@ -28,6 +28,7 @@ angular.module('Game')
     putGame: function(game) {
       var gameId = game._id;
       delete game._id;
+      console.log(game);
       return $http({
         url: ServerEndpoint.url + "/game/"+gameId,
         method: "PUT",
@@ -77,12 +78,10 @@ angular.module('Game')
     putScoreBoardEntry: function(game, scoreBoardEntry) {
       var gameId = game._id;
       delete game._id;
-      var scoreBoardEntryId = scoreBoardEntry._id;
-      delete scoreBoardEntry._id;
       return $http({
-        url: ServerEndpoint.url + "/game/" + gameId + "/scoreBoardEntry/" + scoreBoardEntryId,
+        url: ServerEndpoint.url + "/game/" + gameId + "/scoreBoardEntry/" + $rootScope.loggedInUser._id,
         method: "PUT",
-        data: game
+        data: scoreBoardEntry
       });
     },
 

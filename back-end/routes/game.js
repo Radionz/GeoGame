@@ -1,15 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
-var ScoreBoard = require('../models/ScoreBoard.js');
+// var ScoreBoard = require('../models/ScoreBoard.js');
 var User = require('../models/User.js');
 var Game = require('../models/Game.js');
 
 /* GET /games listing. */
 router.get('/', function(req, res, next) {
   Game.find()
-  .populate('scoreBoard')
-  .populate({ path: 'scoreBoard.user', model : User })
+  .populate('scoreBoard.user')
+  // .populate('scoreBoard')
+  // .populate({ path: 'scoreBoard.user', model : User })
   .exec(function (err, game) {
     if (err) return next(err);
     res.json(game);
@@ -27,8 +28,9 @@ router.post('/', function(req, res, next) {
 /* GET /game/id */
 router.get('/:id', function(req, res, next) {
   Game.findById(req.params.id)
-  .populate('scoreBoard')
-  .populate({ path: 'scoreBoard.user', model : User })
+  .populate('scoreBoard.user')
+  // .populate('scoreBoard')
+  // .populate({ path: 'scoreBoard.user', model : User })
   .exec(function (err, game) {
     if (err) return next(err);
     res.json(game);
@@ -45,26 +47,70 @@ router.get('/user/:id', function(req, res, next) {
 
 /* PUT /user/:id */
 router.put('/:id', function(req, res, next) {
-  Game.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
-});
+  //console.log(req.body.scoreBoard);
+  // Game.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, post) {
+  //   if (err) return next(err);
+  //   res.json(post);
+  // });
 
-router.put('/:gameId/scoreBoardEntry/:scoreBoardEntryId', function(req, res, next) {
-  Game.findById(req.params.gameId)
-  .populate({
-    path: 'scoreBoard',
-    populate: { path: 'user' }
-  })
+  Game.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  .populate('scoreBoard.user')
+  // .populate('scoreBoard')
+  // .populate({ path: 'scoreBoard.user', model : User })
   .exec(function (err, game) {
     if (err) return next(err);
-    console.log(game);
+    res.json(game);
   });
 
-  ScoreBoard.findByIdAndUpdate(req.params.scoreBoardEntryId, req.body, {new: true}, function (err, post) {
+  // Game.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, post) {
+  //   if (err) return next(err);
+  //   res.json(post);
+  // });
+
+  // Game.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  // .populate('scoreBoard')
+  // .populate({ path: 'scoreBoard.user', model : User })
+  // .exec(function (err, game) {
+  //   if (err) return next(err);
+  //   res.json(post);
+  // });
+});
+
+// router.put('/:id/scoreBoard', function(req, res, next) {
+//   console.log(req.body.scoreBoard);
+//
+//   Game.findById(req.params.id)
+//   .populate('scoreBoard')
+//   .populate({ path: 'scoreBoard.user', model : User })
+//   .exec(function (err, game) {
+//     if (err) return next(err);
+//     res.json(game);
+//
+//     User.findById(req.body.scoreBoard.user)
+//     .populate('scoreBoard')
+//     .populate({ path: 'scoreBoard.user', model : User })
+//     .exec(function (err, game) {
+//       if (err) return next(err);
+//       res.json(game);
+//     });
+//
+//   });
+//
+// });
+
+router.put('/:gameId/scoreBoardEntry/:userId', function(req, res, next) {
+  Game.findById(req.params.gameId)
+  .populate('scoreBoard.user')
+  // .populate('scoreBoard')
+  // .populate({ path: 'scoreBoard.user', model : User })
+  .exec(function (err, game) {
     if (err) return next(err);
-    res.json(post);
+    for (var i = 0; i < game.scoreBoard.length; i++) {
+      if (game.scoreBoard[i].user._id == req.body.user._id) {
+        game.scoreBoard[i].loc = req.body.loc;
+        game.save();
+      }
+    }
   });
 });
 
