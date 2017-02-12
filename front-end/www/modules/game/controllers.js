@@ -668,4 +668,112 @@ angular.module('Game')
   function stopCountDown(game) {
     game.timeElapsed = "00:00:00";
   }
+})
+
+.controller('GameAdminCtrl', function($scope, $interval, GameService, QuestionService) {
+
+  $scope.$on("$ionicView.enter", function(event, data){
+    GameService.getGames().then(function(response) {
+      var games = response.data;
+
+      //If the game is started we start the count down of play time remaining
+      angular.forEach(games, function(game) {
+        startCountDown(game, $interval);
+        console.log(game);
+        angular.forEach(game.scoreBoard, function(player) {
+          console.log(player);
+        });
+
+        game.questionsBody = [];
+        angular.forEach(game.questions, function(questionId) {
+          QuestionService.getQuestion(questionId).then(function(response) {
+            var question = response.data;
+            game.questionsBody.push(question);
+
+            question.clue_image_url = ServerEndpoint.url + "/question/" + question._id + "/clue_image";
+
+            addQuestionToMap(question);
+          });
+        });
+
+      });
+
+      $scope.games = games;
+    });
+
+    $scope.initMap();
+  });
+
+  $scope.initMap = function () {
+    $scope.map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 43.6221174, lng: 7.0391009},
+      streetViewControl: false,
+      zoom: 14
+    });
+
+    google.maps.event.addListener($scope.map, 'click', function( event ){
+      $scope.question.loc.coordinates[0] = event.latLng.lng();
+      $( "input[placeholder='Longitude']" ).val(event.latLng.lng());
+      $( "input[placeholder='Longitude']" ).siblings('span').addClass('has-input');
+
+      $scope.question.loc.coordinates[1] = event.latLng.lat();
+      $( "input[placeholder='Latitude']" ).val(event.latLng.lat());
+      $( "input[placeholder='Latitude']" ).siblings('span').addClass('has-input');
+    });
+  }
+
+  function addQuestionToMap(question) {
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(question.loc.coordinates[1], question.loc.coordinates[0]),
+      map: $scope.map,
+      icon: image,
+      title: question.name,
+      animation: google.maps.Animation.DROP
+    });
+
+    var circle = new google.maps.Circle({
+      map: $scope.map,
+      center: marker.position,
+      radius: question.radius,    // 10 miles in metres
+      fillColor: '#AA0000',
+      fillOpacity: 0.5
+    });
+
+    var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">'+question.name+' ( '+question.nb_point+'pts )</h1>'+
+    '<div id="bodyContent">'+
+    '<p> Question: '+question.question+'</p>'+
+    '<p> Answer : '+question.answer+'</p>'+
+    '</div>'+
+    '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+
+    marker.addListener('click', function() {
+      infowindow.open($scope.map, marker);
+    });
+  }
+
+  function startCountDown(game, $interval) {
+    game.timeElapsed = "00:00:00";
+    if (game.status == "STARTED") {
+      var endTime = new Date(game.started_at).getTime() + (game.duration*60*1000);
+      game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
+      var watchTimeRemaining = $interval(function(){
+        game.timeElapsed = new Date(endTime).getTime() - new Date().getTime() - 3600*1000;
+        if(game.timeElapsed <= 0){
+          $interval.cancel(watchTimeRemaining);
+          GameService.endGame(game._id).then(function(response) {
+            var game = response.data;
+            stopCountDown(game);
+            $scope.games[game.index] = game;
+          });
+        }
+      }, 1000);
+    }
+  }
 });

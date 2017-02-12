@@ -72,7 +72,19 @@ angular.module('Game')
         url: ServerEndpoint.url + "/game/" + id,
         method: "DELETE"
       });
-    }
+    },
+
+    putScoreBoardEntry: function(game, scoreBoardEntry) {
+      var gameId = game._id;
+      delete game._id;
+      var scoreBoardEntryId = scoreBoardEntry._id;
+      delete scoreBoardEntry._id;
+      return $http({
+        url: ServerEndpoint.url + "/game/" + gameId + "/scoreBoardEntry/" + scoreBoardEntryId,
+        method: "PUT",
+        data: game
+      });
+    },
 
   };
 });

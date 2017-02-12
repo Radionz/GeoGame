@@ -1,0 +1,40 @@
+<ion-view view-title="Game manager">
+  <ion-content>
+    <div class="row responsive-md">
+      <div class="col-33">
+        <div class="card">
+          <div class="item item-divider item-icon-right" style=" background-color: #e2e5ea;">
+            <i class="icon ion-map"></i>
+            Game's list
+          </div>
+          <div class="item item-text-wrap">
+            <ion-list>
+              <ion-radio ng-model="gameSelected" ng-value="game._id" ng-show="game.status == 'STARTED'" ng-repeat="game in games">
+                <h2>{{game.name}}</h2>
+                <p>{{game.questions.length}} question(s)</p>
+                <p>{{game.duration}} minutes</p>
+                <p ng-show="game.status == 'STARTED'">{{game.scoreBoard.length}}/{{game.playerNb}} player(s)</p>
+                <ul ng-show="game.status == 'STARTED'" >
+                  <li ng-repeat="scoreBoardEntry in game.scoreBoard"><p style="margin-left : 16px;">{{scoreBoardEntry.user.name}}</p></li>
+                </ul>
+                <p ng-show="game.status == 'STARTED'">Started at {{game.started_at | date:'HH:mm'}} ({{game.timeElapsed | date:'HH:mm:ss'}} remaining)</p>
+                <div style="clear: both;"></div>
+              </ion-radio>
+            </ion-list>
+          </div>
+        </div>
+      </div>
+      <div class="col-67">
+        <div class="card">
+          <div class="item item-divider" style=" background-color: #e2e5ea;">
+            Players's map
+          </div>
+          <div class="item" style="padding: 5px;">
+            <div id="map" data-tap-disabled="true"></div>
+          </div>
+        </div>
+      </div>
+      <!-- /col-67  -->
+    </div>
+  </ion-content>
+</ion-view>

@@ -105,6 +105,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'Welcome', 'Game', 'Q
             }
         }
     })
+    .state('app.gameAdmin', {
+        url: '/gameAdmin',
+        views: {
+            'menuContent': {
+                templateUrl: 'modules/game/views/gameAdmin.html',
+                controller: 'GameAdminCtrl'
+            }
+        }
+    })
     .state('app.questionManager', {
         url: '/questionManager',
         views: {
