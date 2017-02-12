@@ -28,7 +28,7 @@
                             <img ng-if="board.user.image != ''" ng-src="{{board.user.image}}"/>
 
                           </a>
-                          <h2 class="text-user">{{board.user.name}}</h2>
+                          <h2 ng-class="{'{{board.user.team}}-team' : board.user.name == 'Manuel'}" class="text-user rounded-frame">{{board.user.name}}</h2>
                         </div>
                       </div>
                     </div>
