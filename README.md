@@ -13,8 +13,6 @@ GeoGame est un jeu de piste qui consiste à faire se déplacer les joueurs autou
 Ce jeu constitue le mini-projet de la matière "Programmable Web client-side & server-side 2016/2017"
 
 
-## Principe ##
-
 ## Comment jouer ?##
 
 Avec Geogame vous vouvez tout simplement vous connecter à ce site [GEOGAME](geogame.dobl.fr) pour jouer avec n'importe qu'il type de périphérique. Il vous suffira de créer un compte, renseigner dans quelle équipe vous êtes et c'est partis ! 
