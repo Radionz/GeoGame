@@ -1,15 +1,34 @@
-# GeoGame
+Geogame App !
+===================
 
-GeoGame est un jeu de piste qui consiste à faire se déplacer les joueurs autour d'un endroit, un bâtiment ou n'importe que point pour répondre à des questions et gagner des points.
 
-Un partie est limitée en temps et un classement est disponible à chaque instant pour voir où en sont les équipes.
+Hey! Bienvenue dans le jeu  **GeoGame**. Nous allons t'expliquer un peu les technologies que nous avons utilisé pour développer ce fantastique jeu de chasse au trésor ! Puis nous allons t'expliquer les règles du jeu et comment le tout fonctionne, ça va être génial !
+
+----------
+
+Introduction
+-------------
+
+GeoGame est un jeu de piste qui consiste à faire se déplacer les joueurs autour d'un endroit, un bâtiment ou n'importe que point pour répondre à des questions et gagner des points. Un partie est limitée en temps et un classement est disponible à chaque instant pour voir où en sont les équipes.
 
 Ce jeu constitue le mini-projet de la matière "Programmable Web client-side & server-side 2016/2017"
 
-**Groupe** :
- - Dorian BLANC
- - Yann GUIDEZ
- - Manuel PAVONE
+----------
+
+Les technos
+-------------
+
+Etant donné que ce jeu est censé s'adapter à tout environnement, extérieur comme intérieur, il doit être utilisable à la fois sur PC que sur téléphone. Nous avons donc choisis d'utiliser le framework **Ionic** permettant de créer une application simple sur navigateur et qui est facilement exportable en application sur téléphone mobile (Android, Ios, Windows phone).
+Niveau backend nous avions besoin de quelque chose de stable et qui puisse être intégré facilement avec le Frontend, nous avons donc choisi Node js ( Techno que nous avons vu en cours) avec MongoDB.
+
+> **Note: qui a fait quoi ?**
+
+> - Dorian BALNC: Backend NodeJS/Mongo + Frontend (Game Manager, Question Manager, GameList)
+> - Manuel PAVONE : Backend (NodeJS, Socket.io) + Frontend (Global Chat, Chat in Game, GameList)  
+> - Yann GUIDEZ : Frondtend ( Questions Map, Game List, Réponse aux questions)
+
+
+----------
 
 ## Principe ##
 
