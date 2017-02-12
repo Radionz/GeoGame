@@ -87,5 +87,12 @@ angular.module('Game')
       });
     },
 
+    postAnswerImage: function(id, formData) {
+      return $http.post(ServerEndpoint.url +  "/game/" + id + "/file", formData, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
+      });
+    }
+
   };
 });

@@ -414,6 +414,7 @@ angular.module('Game')
 
       angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
         if(scoreBoardEntry.user._id == userId){
+          scoreBoardEntry.questionsAnswered = {};
           scoreBoardEntry.questionsAnswered.questionId = question._id;
           if (question.answerType == "Text") {
             scoreBoardEntry.questionsAnswered.answer = $scope.data.answer;
@@ -423,16 +424,16 @@ angular.module('Game')
           }
           scoreBoardEntry.questionsAnswered.status = "ANSWERED";
           console.log(scoreBoardEntry);
-          // GameService.putScoreBoardEntry($scope.game, scoreBoardEntry).then(function(response){
-          // });
+          GameService.putScoreBoardEntry($scope.game, scoreBoardEntry).then(function(response){
+          });
           return;
         }
       });
 
-      Game.postAnswerImage($scope.game._id, userId, question._id, formData).then(function(response) {
-        $scope.questions.push(question);
-        addQuestionToMap(question);
-      });
+      // Game.postAnswerImage($scope.game._id, userId, question._id, formData).then(function(response) {
+      //   $scope.questions.push(question);
+      //   addQuestionToMap(question);
+      // });
 
       angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
         if(scoreBoardEntry.user._id == userId){

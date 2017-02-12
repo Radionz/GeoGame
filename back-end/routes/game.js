@@ -107,6 +107,7 @@ router.put('/:gameId/scoreBoardEntry/:userId', function(req, res, next) {
     if (err) return next(err);
     for (var i = 0; i < game.scoreBoard.length; i++) {
       if (game.scoreBoard[i].user._id == req.body.user._id) {
+        game.scoreBoard[i].questionsAnswered = req.body.questionsAnswered;
         game.scoreBoard[i].loc = req.body.loc;
         game.save();
       }
