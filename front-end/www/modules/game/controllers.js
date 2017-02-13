@@ -337,6 +337,7 @@ angular.module('Game')
 
         $scope.data = {};
         if(!open && !isQuestionAnswered(question._id, $rootScope.loggedInUser._id) && distance <= question.radius){
+          console.log(!open ,!isQuestionAnswered(question._id, $rootScope.loggedInUser._id) , distance <= question.radius);
           open = true;
 
           if (question.answerType == "Text") {
@@ -363,7 +364,6 @@ angular.module('Game')
                 text: '<b>Send my Answer</b>',
                 type: 'button-positive',
                 onTap: function(e) {
-                  console.log($scope.data.answer);
                   if ($scope.data.answer == "") {
                       e.preventDefault();
                   }
@@ -377,17 +377,17 @@ angular.module('Game')
 
           questionPopUp.then(function(res) {
             open = false;
-            $scope.showAlert = function() {
-              var alertPopup = $ionicPopup.alert({
-                title: 'Yes ! Response is saved',
-                template: 'The game master will examine your answer !'
-              });
 
-              alertPopup.then(function(res) {
-                console.log("popupclosed");
-                console.log(res);
-              });
-            };
+            var alertPopup = $ionicPopup.alert({
+              title: 'Yes ! Response is saved',
+              template: 'The game master will examine your answer !'
+            });
+
+            alertPopup.then(function(res) {
+              console.log("popupclosed");
+              console.log(res);
+            });
+
 
           });
         }
@@ -399,16 +399,18 @@ angular.module('Game')
 
 
     function isQuestionAnswered(questionId, userId){
+      var found = false;
       angular.forEach($scope.game.scoreBoard, function(scoreBoardEntry){
         if(scoreBoardEntry.user._id == userId){
           angular.forEach(scoreBoardEntry.questionsAnswered, function(questionAnswered){
-            if (questionId == questionsAnswered.questionId && questionsAnswered.status != "NOT_ANSWERED") {
-              return true;
+            if (questionId == questionAnswered.questionId && questionAnswered.status != "NOT_ANSWERED") {
+              console.log("true");
+              found =  true;
             }
           });
         }
       });
-      return false;
+      return found;
     }
 
     function submitAnswer(userId, question){
@@ -786,7 +788,8 @@ angular.module('Game')
     };
 
     var markers = []
-    players = [];
+    players = [],
+    interval = null;
 
     $scope.$on("$ionicView.enter", function(event, data){
       GameService.getGames().then(function(response) {
@@ -813,7 +816,7 @@ angular.module('Game')
       markers = [];
 
       clearInterval(interval);
-      var interval =setInterval(function () {
+      interval = setInterval(function () {
         GameService.getGame(game._id).then(function(response) {
           $scope.game = response.data;
         });
@@ -825,14 +828,21 @@ angular.module('Game')
         angular.forEach(game.scoreBoard, function(player) {
           addPlayerToMap(player);
         });
-      },1000);
-
+      },30000);
 
       game.questionsBody = [];
       angular.forEach(game.questions, function(questionId) {
         QuestionService.getQuestion(questionId).then(function(response) {
           var question = response.data;
           game.questionsBody.push(question);
+
+          angular.forEach(game.scoreBoard, function(player) {
+            angular.forEach(player.questionsAnswered, function(questionAnswered) {
+              if (questionAnswered.questionId == question._id) {
+                questionAnswered.questionBody = question;
+              }
+            });
+          });
 
           question.clue_image_url = ServerEndpoint.url + "/question/" + question._id + "/clue_image";
 

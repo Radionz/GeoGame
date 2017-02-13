@@ -107,7 +107,38 @@ router.put('/:gameId/scoreBoardEntry/:userId', function(req, res, next) {
     if (err) return next(err);
     for (var i = 0; i < game.scoreBoard.length; i++) {
       if (game.scoreBoard[i].user._id == req.body.user._id) {
-        game.scoreBoard[i].questionsAnswered = req.body.questionsAnswered;
+        if (req.body.questionsAnswered != null) {
+          var found = [];
+          console.log("here");
+          console.log(game.scoreBoard[i].questionsAnswered.length);
+          if (game.scoreBoard[i].questionsAnswered.length == 0) {
+            game.scoreBoard[i].questionsAnswered.push(req.body.questionsAnswered);
+          }
+          else {
+            for (var j = 0; j < game.scoreBoard[i].questionsAnswered.length; j++) {
+
+              if (typeof req.body.questionsAnswered.questionId !== 'undefined' && game.scoreBoard[i].questionsAnswered[j].questionId != req.body.questionsAnswered.questionId) {
+
+                console.log(game.scoreBoard[i].questionsAnswered[j].questionId , req.body.questionsAnswered.questionId);
+                alreadyIn = false;
+                for (var a = 0; a < found.length; a++) {
+                  if (game.scoreBoard[i].questionsAnswered[j].questionId == found[a].questionId) {
+                    alreadyIn = true;
+                  }
+                }
+                if (!alreadyIn) {
+                  game.scoreBoard[i].questionsAnswered.push(req.body.questionsAnswered);
+                }
+
+              }
+            }
+          }
+          console.log(game.scoreBoard[i].questionsAnswered);
+
+
+          // console.log(found, req.body.questionsAnswered);
+
+        }
         game.scoreBoard[i].loc = req.body.loc;
         game.save();
       }
